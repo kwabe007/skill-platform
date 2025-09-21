@@ -41,6 +41,15 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme custom {
+  --background-image-gradient-hero: linear-gradient(
+    135deg,
+    oklch(41% 0.12 273) 0%,
+    oklch(41% 0.16 308) 50%,
+    oklch(42% 0.15 328) 100%
+  );
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
