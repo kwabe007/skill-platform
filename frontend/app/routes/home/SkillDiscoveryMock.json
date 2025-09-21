@@ -1,0 +1,56 @@
+[
+  {
+    "name": "AI Development",
+    "offers": 1,
+    "needs": 2,
+    "startups": 3
+  },
+  {
+    "name": "Brand Design",
+    "offers": 1,
+    "needs": 0,
+    "startups": 1
+  },
+  {
+    "name": "Web Development",
+    "offers": 2,
+    "needs": 1,
+    "startups": 4
+  },
+  {
+    "name": "Marketing Strategy",
+    "offers": 1,
+    "needs": 2,
+    "startups": 2
+  },
+  {
+    "name": "Blockchain Solutions",
+    "offers": 0,
+    "needs": 2,
+    "startups": 3
+  },
+  {
+    "name": "Product Design",
+    "offers": 1,
+    "needs": 1,
+    "startups": 2
+  },
+  {
+    "name": "E-commerce Platforms",
+    "offers": 2,
+    "needs": 1,
+    "startups": 3
+  },
+  {
+    "name": "Cybersecurity",
+    "offers": 1,
+    "needs": 2,
+    "startups": 2
+  },
+  {
+    "name": "Data Analytics",
+    "offers": 2,
+    "needs": 1,
+    "startups": 3
+  }
+]
