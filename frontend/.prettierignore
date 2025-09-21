@@ -5,5 +5,7 @@ coverage
 # Ignore generated pnpm lock file
 pnpm-lock.yaml
 
+# Generated JetBrains IDE folder
 .idea
+
 .prettierignore
