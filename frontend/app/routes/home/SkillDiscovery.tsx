@@ -7,7 +7,7 @@ export default function SkillDiscovery() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
       {skillMockData.map((skillData) => (
-        <Link key={skillData.name} to={`/skills/test`}>
+        <Link key={skillData.name} to={`/startup-offerings/test`}>
           <Card>
             {/* TODO: Add visual feedback box-shadow on hover */}
             <CardContent className="p-4 text-center">

@@ -5,24 +5,27 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Building2, CheckCircle, MessageSquare } from "lucide-react";
+import { Building2, MessageSquare } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { clsx } from "clsx";
 
-export default function StartupCard() {
+interface StartupCardProps {
+  className?: string;
+}
+
+export default function StartupCard({ className }: StartupCardProps) {
   const offers = ["Cloud Infrastructure", "DevOps"];
   const needs = ["Frontend Development", "UI/UX Design"];
 
   return (
-    <Card
-      className={`group relative transition-all duration-300 hover:scale-[1.02]`}
-    >
-      <CardHeader className="pb-3">
+    <Card as="article" className={clsx("", className)}>
+      <CardHeader as="header" className="pb-3">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-gradient-primary">
             <Building2 className="w-5 h-5 text-primary-foreground" />
           </div>
-          <CardTitle className="text-lg font-semibold">
+          <CardTitle as="header" className="text-lg font-semibold">
             CloudScale Infrastructure
           </CardTitle>
         </div>
@@ -37,18 +40,17 @@ export default function StartupCard() {
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
           <div className="flex flex-wrap gap-1.5">
             {offers.map((offer, index) => (
-              <Badge key={index} className="text-xs">
+              <Badge key={index} variant="secondary" className="text-xs">
                 {offer}
               </Badge>
             ))}
           </div>
         </div>
-
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Needs:</h4>
           <div className="flex flex-wrap gap-1.5">
             {needs.map((need, index) => (
-              <Badge key={index} className="text-xs">
+              <Badge key={index} variant="secondary" className="text-xs">
                 {need}
               </Badge>
             ))}
@@ -56,8 +58,8 @@ export default function StartupCard() {
         </div>
       </CardContent>
 
-      <CardFooter>
-        <Button size="sm" className="w-full transition-smooth">
+      <CardFooter as="footer">
+        <Button size="sm" className="w-full">
           <MessageSquare className="w-4 h-4 mr-2" />
         </Button>
       </CardFooter>

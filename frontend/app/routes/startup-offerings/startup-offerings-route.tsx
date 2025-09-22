@@ -21,7 +21,7 @@ export default function StartupOfferingsRoute() {
           2
         </Badge>
       </div>
-      <StartupCard />
+      <StartupCard className="mt-4" />
     </div>
   );
 }
