@@ -19,13 +19,14 @@ export default function StartupCard({ className }: StartupCardProps) {
   const needs = ["Frontend Development", "UI/UX Design"];
 
   return (
+    /* TODO: Add visual feedback box shadow on card hover */
     <Card as="article" className={clsx("", className)}>
       <CardHeader as="header" className="pb-3">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-gradient-primary">
             <Building2 className="w-5 h-5 text-primary-foreground" />
           </div>
-          <CardTitle as="header" className="text-lg font-semibold">
+          <CardTitle as="h3" className="text-lg font-semibold">
             CloudScale Infrastructure
           </CardTitle>
         </div>
@@ -61,6 +62,7 @@ export default function StartupCard({ className }: StartupCardProps) {
       <CardFooter as="footer">
         <Button size="sm" className="w-full">
           <MessageSquare className="w-4 h-4 mr-2" />
+          Connect
         </Button>
       </CardFooter>
     </Card>
