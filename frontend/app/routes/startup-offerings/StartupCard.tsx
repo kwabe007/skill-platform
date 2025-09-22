@@ -57,11 +57,7 @@ export default function StartupCard() {
       </CardContent>
 
       <CardFooter>
-        <Button
-          onClick={() => onConnect(id)}
-          size="sm"
-          className="w-full transition-smooth"
-        >
+        <Button size="sm" className="w-full transition-smooth">
           <MessageSquare className="w-4 h-4 mr-2" />
         </Button>
       </CardFooter>

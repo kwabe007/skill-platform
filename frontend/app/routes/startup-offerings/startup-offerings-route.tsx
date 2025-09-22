@@ -2,9 +2,9 @@ import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
-import StartupCard from "~/routes/skill-detail/StartupCard";
+import StartupCard from "~/routes/startup-offerings/StartupCard";
 
-export default function SkillDetailRoute() {
+export default function StartupOfferingsRoute() {
   return (
     <div className="px-4 py-10">
       <Button variant="outline">
