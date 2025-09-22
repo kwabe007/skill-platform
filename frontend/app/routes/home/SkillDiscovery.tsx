@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 export default function SkillDiscovery() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
       {skillMockData.map((skillData) => (
         <Link key={skillData.name} to={`/skills/test`}>
           <Card>

@@ -1,4 +1,5 @@
 import SkillDiscovery from "~/routes/home/SkillDiscovery";
+import Container from "~/components/Container";
 
 export default function Home() {
   return (
@@ -15,17 +16,17 @@ export default function Home() {
         </p>
       </section>
       <section className="py-16">
-        <div className="container mx-auto px-4">
+        <Container>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Discover Skills</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground">
               Browse skills to find startups offering or needing them
             </p>
           </div>
-          <div className="max-w-6xl mx-auto">
+          <div className="">
             <SkillDiscovery />
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );
