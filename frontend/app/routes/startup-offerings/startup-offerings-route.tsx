@@ -9,8 +9,8 @@ export default function StartupOfferingsRoute() {
   return (
     <div className="py-10">
       <Container>
-        <Button variant="outline">
-          <Link className="flex gap-2 items-center" to="/skill/test">
+        <Button asChild variant="outline">
+          <Link className="flex gap-2 items-center" to="/">
             <ArrowLeft className="w-4 h-4" />
             Back to Skills
           </Link>
