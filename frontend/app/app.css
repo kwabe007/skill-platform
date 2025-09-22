@@ -44,9 +44,14 @@
 @theme custom {
   --background-image-gradient-hero: linear-gradient(
     135deg,
-    oklch(41% 0.12 273) 0%,
-    oklch(41% 0.16 308) 50%,
-    oklch(42% 0.15 328) 100%
+    var(--primary) 0%,
+    oklch(0.41 0.16 308) 50%,
+    oklch(0.41 0.16 328) 100%
+  );
+  --background-image-gradient-primary: linear-gradient(
+    135deg,
+    oklch(0.37 0.14 264),
+    oklch(0.37 0.14 308)
   );
 }
 
@@ -58,7 +63,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.41 0.16 278);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
