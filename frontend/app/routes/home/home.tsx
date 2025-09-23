@@ -1,6 +1,7 @@
 import SkillDiscovery from "~/routes/home/SkillDiscovery";
 import Container from "~/components/Container";
 import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      <Footer />
     </div>
   );
 }

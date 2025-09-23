@@ -43,8 +43,12 @@
 
 /* TODO: Find oklch equivalent for blue, purple and plum */
 @theme custom {
+  /* variables */
   --purple: hsl(267 71% 36%);
   --plum: hsl(290 71% 36%);
+
+  /* tailwind classes */
+  --header-height: 4rem;
 
   --background-image-gradient-primary: linear-gradient(
     135deg,
@@ -52,7 +56,6 @@
     oklch(0.41 0.16 280) 50%,
     var(--purple)
   );
-
   --background-image-gradient-hero: linear-gradient(
     135deg,
     var(--primary) 0%,
@@ -60,7 +63,8 @@
     var(--plum) 100%
   );
 
-  --header-height: 4rem;
+  --color-footer: oklch(0.25 0.05 270);
+  --color-footer-muted-foreground: oklch(0.6 0.05 270);
 }
 
 :root {
