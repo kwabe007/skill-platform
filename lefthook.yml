@@ -1,7 +1,11 @@
 pre-commit:
   parallel: true
   commands:
-    prettier:
+    prettier-frontend:
       root: "frontend/"
       run: pnpm prettier --write {staged_files}
       stage_fixed: true
+    prettier-cms:
+      root: "cms/"
+      run: pnpm prettier --write {staged_files}
+
