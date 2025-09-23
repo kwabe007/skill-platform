@@ -7,8 +7,8 @@ import {
 } from "~/components/ui/card";
 import { Building2, MessageSquare } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
 import { clsx } from "clsx";
+import ConnectModal from "~/routes/startup-offerings/ConnectModal";
 
 interface StartupCardProps {
   className?: string;
@@ -60,10 +60,7 @@ export default function StartupCard({ className }: StartupCardProps) {
       </CardContent>
 
       <CardFooter as="footer">
-        <Button size="sm" className="w-full">
-          <MessageSquare className="w-4 h-4 mr-2" />
-          Connect
-        </Button>
+        <ConnectModal />
       </CardFooter>
     </Card>
   );
