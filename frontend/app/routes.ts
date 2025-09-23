@@ -6,4 +6,5 @@ export default [
     "startup-offerings/:skillId",
     "routes/startup-offerings/startup-offerings-route.tsx",
   ),
+  route("login", "routes/login.tsx"),
 ] satisfies RouteConfig;
