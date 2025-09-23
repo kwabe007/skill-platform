@@ -10,7 +10,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "~/components/ui/button";
 import ButtonLink from "~/components/ButtonLink";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock, Mail } from "lucide-react";
+import StandardInputWithLabel from "~/components/StandardInputWithLabel";
 
 export default function Login() {
   return (
@@ -35,29 +36,17 @@ export default function Login() {
           </CardHeader>
           <CardContent>
             <Form className="space-y-4">
-              <div className="space-y-2">
-                <Label
-                  className="block text-sm font-medium leading-none"
-                  htmlFor="email"
-                >
-                  Email
-                </Label>
-                <Input id="email" name="email" placeholder="Enter your email" />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  className="block text-sm font-medium leading-none"
-                  htmlFor="password"
-                >
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                />
-              </div>
+              <StandardInputWithLabel
+                name="email"
+                icon={Mail}
+                placeholder="Enter your email"
+              />
+              <StandardInputWithLabel
+                name="password"
+                type="password"
+                icon={Lock}
+                placeholder="Enter your password"
+              />
               <Button className="w-full">Sign in</Button>
             </Form>
           </CardContent>
