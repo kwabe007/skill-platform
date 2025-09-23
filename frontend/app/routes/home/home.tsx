@@ -1,10 +1,12 @@
 import SkillDiscovery from "~/routes/home/SkillDiscovery";
 import Container from "~/components/Container";
+import Header from "~/components/Header";
 
 export default function Home() {
   return (
     <div>
-      <section className="bg-gradient-hero text-center py-10 px-4">
+      <Header />
+      <section className="bg-gradient-hero text-center py-16 px-4 -mt-[4rem]">
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
           <span>Swap skills,</span>
           <br />
