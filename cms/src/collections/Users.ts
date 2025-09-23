@@ -7,7 +7,36 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    {
+      name: "fullName",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "skillsOffered",
+      type: "relationship",
+      relationTo: "skills",
+      hasMany: true,
+    },
+    {
+      name: "skillsNeeded",
+      type: "relationship",
+      relationTo: "skills",
+      hasMany: true,
+    },
+    {
+      name: "company",
+      type: "group",
+      fields: [
+        {
+          name: "name",
+          type: "text",
+        },
+        {
+          name: "description",
+          type: "textarea",
+        },
+      ],
+    },
   ],
 };
