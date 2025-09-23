@@ -8,12 +8,7 @@ interface FooterProps {
 
 export default function Footer({ className }: FooterProps) {
   return (
-    <footer
-      className={cn(
-        "border-t bg-footer text-footer-muted-foreground",
-        className,
-      )}
-    >
+    <footer className={cn("bg-footer text-footer-muted-foreground", className)}>
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
