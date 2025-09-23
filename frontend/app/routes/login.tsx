@@ -5,9 +5,7 @@ import {
   CardHeader,
 } from "~/components/ui/card";
 import Container from "~/components/Container";
-import { Form, Link } from "react-router";
-import { Input } from "~/components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import { Form } from "react-router";
 import { Button } from "~/components/ui/button";
 import ButtonLink from "~/components/ButtonLink";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
