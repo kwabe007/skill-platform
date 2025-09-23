@@ -7,4 +7,5 @@ export default [
     "routes/startup-offerings/startup-offerings-route.tsx",
   ),
   route("login", "routes/login.tsx"),
+  route("signup", "routes/signup.tsx"),
 ] satisfies RouteConfig;
