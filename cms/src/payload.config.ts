@@ -25,8 +25,8 @@ export default buildConfig({
   collections: [Users, Media, Skills],
   editor: lexicalEditor(),
   email: nodemailerAdapter({
-    defaultFromAddress: 'info@linkt.se',
-    defaultFromName: 'Skill Platform',
+    defaultFromAddress: "info@linkt.se",
+    defaultFromName: "Skill Platform",
     // Nodemailer transportOptions
     transportOptions: {
       host: process.env.SMTP_HOST,
