@@ -9,3 +9,6 @@ pnpm-lock.yaml
 
 # Ignore this file to avoid "No parser" error
 .prettierignore
+
+# Ignore to avoid "No parser" error
+.env.example

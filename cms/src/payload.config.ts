@@ -25,12 +25,13 @@ export default buildConfig({
   collections: [Users, Media, Skills],
   editor: lexicalEditor(),
   email: nodemailerAdapter({
-    defaultFromAddress: "info@linkt.se",
+    defaultFromAddress: process.env.SMTP_USER ?? "",
     defaultFromName: "Skill Platform",
     // Nodemailer transportOptions
     transportOptions: {
       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
