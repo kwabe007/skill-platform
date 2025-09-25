@@ -8,6 +8,7 @@ pnpm-lock.yaml
 # Generated JetBrains IDE folder
 .idea
 
+# Ignore this file to avoid "No parser" error
 .prettierignore
 
 *.txt
