@@ -1,18 +1,48 @@
 import Container from "~/components/Container";
 import ButtonLink from "~/components/ButtonLink";
-import { ArrowLeft, Mail, User, Lock } from "lucide-react";
+import { ArrowLeft, Lock, Mail, User } from "lucide-react";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "~/components/ui/card";
-import { Form } from "react-router";
+import type { Route } from "./+types/signup";
 import { Button } from "~/components/ui/button";
 import { PLATFORM_NAME } from "~/utils";
-import StandardInputWithLabel from "~/components/StandardInputWithLabel";
+import { z } from "zod";
+import { useForm } from "@rvf/react-router";
+import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
+
+const nonEmptyStringSchema = z.string().min(1, "This field is required.");
+
+const signupSchema = z.object({
+  fullName: nonEmptyStringSchema,
+  email: nonEmptyStringSchema,
+  password: z.string().min(6, "Password should be at least 6 characters."),
+});
+
+export async function loader({}: Route.LoaderArgs) {
+  return {};
+}
+
+export async function action({}: Route.ActionArgs) {
+  return {};
+}
 
 export default function Signup() {
+  const form = useForm({
+    schema: signupSchema,
+    method: "POST",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  console.log("name error:", form.error("email"));
+
   return (
     <div className="bg-gradient-hero">
       <Container className="max-w-md min-h-screen flex flex-col items-center justify-center lg:px-0">
@@ -34,27 +64,26 @@ export default function Signup() {
             </p>
           </CardHeader>
           <CardContent>
-            <Form className="space-y-4">
-              <StandardInputWithLabel
-                name="fullName"
+            <form {...form.getFormProps()} className="space-y-4">
+              <ValidatedInputWithLabel
+                scope={form.scope("fullName")}
                 label="Full name"
                 icon={User}
                 placeholder="Enter your full name"
               />
-              <StandardInputWithLabel
-                name="email"
+              <ValidatedInputWithLabel
+                scope={form.scope("email")}
                 icon={Mail}
                 placeholder="Enter your email"
               />
-              <StandardInputWithLabel
-                name="password"
+              <ValidatedInputWithLabel
+                scope={form.scope("password")}
                 type="password"
                 icon={Lock}
                 placeholder="Enter your password"
               />
-
               <Button className="w-full">Create account</Button>
-            </Form>
+            </form>
           </CardContent>
           <CardFooter className="flex flex-col">
             <p className="text-sm text-muted-foreground">
