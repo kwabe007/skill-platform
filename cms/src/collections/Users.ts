@@ -1,4 +1,4 @@
-import type { CollectionConfig } from "payload";
+import { CollectionConfig, ValidationError } from "payload";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -42,4 +42,19 @@ export const Users: CollectionConfig = {
       ],
     },
   ],
+  hooks: {
+    beforeValidate: [
+      ({ data: { password } = {} }) => {
+        if (!password) {
+          return;
+        }
+        if (password.length < 6) {
+          throw new ValidationError({
+            collection: "users",
+            errors: [{ message: "Password must be at least 6 characters long.", path: "password" }],
+          });
+        }
+      },
+    ],
+  },
 };
