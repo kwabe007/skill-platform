@@ -10,24 +10,27 @@ import {
 import type { Route } from "./+types/signup";
 import { Button } from "~/components/ui/button";
 import { PLATFORM_NAME } from "~/utils";
-import { z } from "zod";
-import { useForm } from "@rvf/react-router";
+import { parseFormData, useForm, validationError } from "@rvf/react-router";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
-
-const nonEmptyStringSchema = z.string().min(1, "This field is required.");
-
-const signupSchema = z.object({
-  fullName: nonEmptyStringSchema,
-  email: nonEmptyStringSchema,
-  password: z.string().min(6, "Password should be at least 6 characters."),
-});
+import { signUp, signupSchema } from "~/api";
+import { redirect } from "react-router";
 
 export async function loader({}: Route.LoaderArgs) {
   return {};
 }
 
-export async function action({}: Route.ActionArgs) {
-  return {};
+export async function action({ request }: Route.ActionArgs) {
+  const result = await parseFormData(request, signupSchema);
+
+  if (result.error) {
+    // validationError comes from `@rvf/react-router`
+    return validationError(result.error, result.submittedData);
+  }
+
+  const user = await signUp(result.data);
+  //TODO: set header on redirect response
+  //TODO: Add redirectUrl query param
+  return redirect("/");
 }
 
 export default function Signup() {
@@ -40,8 +43,6 @@ export default function Signup() {
       password: "",
     },
   });
-
-  console.log("name error:", form.error("email"));
 
   return (
     <div className="bg-gradient-hero">
