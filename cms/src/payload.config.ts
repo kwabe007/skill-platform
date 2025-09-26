@@ -24,20 +24,23 @@ export default buildConfig({
   },
   collections: [Users, Media, Skills],
   editor: lexicalEditor(),
-  email: nodemailerAdapter({
-    defaultFromAddress: process.env.SMTP_USER ?? "",
-    defaultFromName: "Skill Platform",
-    // Nodemailer transportOptions
-    transportOptions: {
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: true,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    },
-  }),
+  email:
+    process.env.DISABLE_EMAIL !== "true"
+      ? nodemailerAdapter({
+          defaultFromAddress: process.env.SMTP_USER ?? "",
+          defaultFromName: "Skill Platform",
+          // Nodemailer transportOptions
+          transportOptions: {
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT),
+            secure: true,
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS,
+            },
+          },
+        })
+      : undefined,
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),

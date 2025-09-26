@@ -7,7 +7,7 @@ export const Users: CollectionConfig = {
     useAsTitle: "email",
   },
   auth: {
-    verify: process.env.NODE_ENV === "production",
+    verify: true
   },
   fields: [
     {
