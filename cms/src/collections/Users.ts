@@ -7,7 +7,7 @@ export const Users: CollectionConfig = {
     useAsTitle: "email",
   },
   auth: {
-    verify: true
+    verify: true,
   },
   fields: [
     {
