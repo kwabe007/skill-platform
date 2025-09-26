@@ -14,6 +14,22 @@ export const signupSchema = z.object({
 });
 type SignupData = z.infer<typeof signupSchema>;
 
+type ValidationFieldError = {
+  message: string;
+  path: string;
+};
+
+type ValidationError = {
+  name: "ValidationError";
+  data: {
+    collection?: string;
+    errors: ValidationFieldError[];
+    global?: string;
+    id?: number | string;
+  };
+  message: string;
+};
+
 export async function signUp(signupData: SignupData) {
   const url = buildUrl(BASE_URL, "api/users");
   const response = await fetch(url, {
@@ -25,9 +41,21 @@ export async function signUp(signupData: SignupData) {
   });
   const jsonData = await response.json();
   if ("errors" in jsonData) {
+    const error = jsonData.errors[0];
+    if (error.name === "ValidationError") {
+      const vError = error as ValidationError;
+      return {
+        error: true as const,
+        path: vError.data.errors[0].path,
+        message: vError.data.errors[0].message,
+      };
+    }
     throw data(jsonData, response.status);
   }
-  return jsonData.doc as User;
+  return {
+    error: false as const,
+    user: jsonData.doc as User,
+  };
 }
 
 export const loginSchema = z.object({

@@ -32,7 +32,16 @@ export async function action({ request }: Route.ActionArgs) {
     return validationError(result.error, result.submittedData);
   }
 
-  const user = await signUp(result.data);
+  const signupResult = await signUp(result.data);
+  if (signupResult.error) {
+    return validationError(
+      {
+        fieldErrors: { [signupResult.path]: signupResult.message },
+      },
+      result.submittedData,
+    );
+  }
+
   //TODO: set header on redirect response
   //TODO: Add redirectUrl query param
   return redirect("/");
