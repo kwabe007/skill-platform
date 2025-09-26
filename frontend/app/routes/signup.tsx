@@ -12,10 +12,15 @@ import { Button } from "~/components/ui/button";
 import { PLATFORM_NAME } from "~/utils";
 import { parseFormData, useForm, validationError } from "@rvf/react-router";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
-import { signUp, signupSchema } from "~/api";
+import { getUser, signUp, signupSchema } from "~/api";
 import { redirect } from "react-router";
 
-export async function loader({}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getUser(request);
+  if (user) {
+    //TODO: Add redirectUrl query param
+    return redirect("/");
+  }
   return {};
 }
 
