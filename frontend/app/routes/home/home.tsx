@@ -1,7 +1,37 @@
 import SkillDiscovery from "~/routes/home/SkillDiscovery";
 import Container from "~/components/Container";
+import type { Route } from "./+types/home";
+import { toastCookieSerializer } from "~/cookie-serializers.server";
+import { data, useLoaderData } from "react-router";
+import { useSuccessToast } from "~/utils";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+  const showToast =
+    (await toastCookieSerializer.parse(cookieHeader)) === "true";
+  return data(
+    { showToast },
+    {
+      headers: {
+        ...(showToast
+          ? {
+              "Set-Cookie": await toastCookieSerializer.serialize("", {
+                maxAge: 0,
+              }),
+            }
+          : {}),
+      },
+    },
+  );
+}
 
 export default function Home() {
+  const { showToast } = useLoaderData<typeof loader>();
+  useSuccessToast(
+    showToast,
+    "Your email address is now verified and you can now log in!",
+  );
+
   return (
     <div>
       <section className="bg-gradient-hero text-center py-16 px-4 -mt-[4rem]">

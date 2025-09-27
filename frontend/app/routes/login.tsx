@@ -30,7 +30,19 @@ export async function action({ request }: Route.ActionArgs) {
     return validationError(result.error, result.submittedData);
   }
 
-  const { token, exp } = await logIn(result.data);
+  const loginResult = await logIn(result.data);
+  if (loginResult.error) {
+    return validationError(
+      {
+        fieldErrors: {
+          [loginResult.path ?? "email"]: loginResult.message,
+        },
+      },
+      result.submittedData,
+    );
+  }
+  const { exp, token } = loginResult;
+
   //`exp` is given in seconds while `Date.now()` gives milliseconds, so adjust accordingly
   const nowSeconds = Math.floor(Date.now() / 1000);
   const maxAge = Math.max(0, exp - nowSeconds);
@@ -83,7 +95,7 @@ export default function Login() {
                 icon={Lock}
                 placeholder="Enter your password"
               />
-              <Button className="w-full">Sign in</Button>
+              <Button className="w-full">Log in</Button>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col">

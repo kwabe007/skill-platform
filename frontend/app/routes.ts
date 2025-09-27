@@ -20,4 +20,5 @@ export default [
     route("signup", "routes/signup.tsx"),
   ]),
   route("logout", "routes/logout.tsx"),
+  route("verify/:token", "routes/verify.tsx"),
 ] satisfies RouteConfig;

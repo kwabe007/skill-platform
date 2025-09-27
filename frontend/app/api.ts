@@ -75,10 +75,24 @@ export async function logIn(loginData: LoginData) {
     body: JSON.stringify(loginData),
   });
   const jsonData = await response.json();
-  if ("errors" in jsonData) {
+
+  if (response.status >= 400 && response.status < 500) {
+    return {
+      error: true as const,
+      path: jsonData.path as string | undefined,
+      message: jsonData.errors[0].message as string,
+    };
+  }
+  if (!response.ok) {
     throw data({ jsonData }, { status: response.status });
   }
-  return jsonData as { user: User; token: string; exp: number };
+
+  return {
+    error: false as const,
+    user: jsonData.user as User,
+    token: jsonData.token as string,
+    exp: jsonData.exp as number,
+  };
 }
 
 export async function logOut(req: Request) {
@@ -116,4 +130,18 @@ export async function getUser(req: Request) {
   }
 
   return jsonData.user as User | null;
+}
+
+export async function verify(token: string) {
+  const url = buildUrl(BASE_URL, `api/users/verify/${token}`);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    throw data({ jsonData }, { status: response.status });
+  }
 }
