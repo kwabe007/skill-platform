@@ -41,3 +41,38 @@ export function useSuccessToast(show: boolean, message: string) {
     }
   }, [show]);
 }
+
+/**
+ * Converts a string key (e.g., "company.name", "fullName", "full-name")
+ * into a human-readable label.
+ *
+ * Rules:
+ * - Dots (`.`) and dashes (`-`) are converted into spaces.
+ * - camelCase and PascalCase are split into separate words.
+ * - First word is capitalized, subsequent words are lowercased.
+ *
+ * @param str - The input string key to format.
+ * @returns The formatted, human-readable label.
+ *
+ * @example
+ * keyToLabel("company.name");   // "Company name"
+ * keyToLabel("fullName");       // "Full name"
+ * keyToLabel("name");           // "Name"
+ * keyToLabel("UserProfileID");  // "User profile id"
+ * keyToLabel("full-name");      // "Full name"
+ */
+export function keyToLabel(str: string): string {
+  return (
+    str
+      // Replace dots and dashes with spaces
+      .replace(/[.\-]/g, " ")
+      // Insert spaces before capital letters (camelCase → camel Case)
+      .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+      // Normalize spacing
+      .replace(/\s+/g, " ")
+      .trim()
+      // Capitalize the first word, lowercase the rest
+      .replace(/^\w/, (c) => c.toUpperCase())
+      .replace(/\b\w/g, (c, i) => (i === 0 ? c : c.toLowerCase()))
+  );
+}

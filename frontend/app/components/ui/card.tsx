@@ -1,11 +1,7 @@
 import * as React from "react";
 
 import { cn } from "~/lib/utils";
-
-// TODO: Fix `as` being typed as any
-type PolymorphicComponentProps<T extends React.ElementType = "div"> = {
-  as?: T;
-} & React.ComponentProps<T>;
+import type { PolymorphicComponentProps } from "~/components/component-types";
 
 function Card<T extends React.ElementType = "div">({
   as,

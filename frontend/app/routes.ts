@@ -14,6 +14,7 @@ export default [
       "startup-offerings/:skillId",
       "routes/startup-offerings/startup-offerings-route.tsx",
     ),
+    route("edit-profile", "routes/edit-profile.tsx"),
   ]),
   layout("routes/footer-only-layout.tsx", [
     route("login", "routes/login.tsx"),

@@ -7,7 +7,7 @@ export default function DefaultLayout() {
   return (
     <>
       <Header />
-      <Main>
+      <Main className="min-h-[calc(100vh-var(--header-height))]">
         <Outlet />
       </Main>
       <Footer />
