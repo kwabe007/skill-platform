@@ -1,5 +1,5 @@
 import type { Route } from "./+types/signup";
-import { logOut } from "~/api";
+import { logOut } from "~/api/api.server";
 import { redirect } from "react-router";
 
 export async function action({ request }: Route.ActionArgs) {

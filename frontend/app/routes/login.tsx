@@ -11,7 +11,8 @@ import ButtonLink from "~/components/ButtonLink";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
 import type { Route } from "./+types/signup";
 import { parseFormData, useForm, validationError } from "@rvf/react-router";
-import { getUser, logIn, loginSchema } from "~/api";
+import { getUser, logIn } from "~/api/api.server";
+import { loginSchema } from "~/api/api-schemas";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 
 export async function loader({ request }: Route.LoaderArgs) {

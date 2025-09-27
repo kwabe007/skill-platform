@@ -1,18 +1,14 @@
-import { z } from "zod";
 import { data } from "react-router";
 import type { User } from "@payload-types";
 import { buildUrl } from "~/utils";
+import invariant from "tiny-invariant";
+import type { LoginData, SignupData } from "~/api/api-schemas";
 
-const BASE_URL = "http://localhost:3000";
-
-const nonEmptyStringSchema = z.string().min(1, "This field is required.");
-
-export const signupSchema = z.object({
-  fullName: nonEmptyStringSchema,
-  email: nonEmptyStringSchema,
-  password: z.string().min(6, "Password should be at least 6 characters."),
-});
-type SignupData = z.infer<typeof signupSchema>;
+invariant(
+  process.env.PAYLOAD_BASE_URL,
+  "PAYLOAD_BASE_URL environment variable must be set",
+);
+const BASE_URL = process.env.PAYLOAD_BASE_URL;
 
 type ValidationFieldError = {
   message: string;
@@ -58,15 +54,8 @@ export async function signUp(signupData: SignupData) {
   };
 }
 
-export const loginSchema = z.object({
-  email: nonEmptyStringSchema,
-  password: nonEmptyStringSchema,
-});
-type LoginData = z.infer<typeof loginSchema>;
-
 export async function logIn(loginData: LoginData) {
   const url = buildUrl(BASE_URL, "api/users/login");
-
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -99,7 +88,6 @@ export async function logOut(req: Request) {
   //TODO: Only get the payload-token cookie
   const requestCookie = req.headers.get("Cookie");
   const url = buildUrl(BASE_URL, "api/users/logout?allSessions=false");
-
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -117,7 +105,6 @@ export async function logOut(req: Request) {
 export async function getUser(req: Request) {
   //TODO: Only get the payload-token cookie
   const requestCookie = req.headers.get("Cookie");
-
   const url = buildUrl(BASE_URL, "api/users/me");
   const response = await fetch(url, {
     method: "GET",

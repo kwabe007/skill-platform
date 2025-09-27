@@ -1,5 +1,5 @@
 import type { Route } from "./+types/verify";
-import { verify } from "~/api";
+import { verify } from "~/api/api.server";
 import { redirect } from "react-router";
 import { toastCookieSerializer } from "~/cookie-serializers.server";
 
