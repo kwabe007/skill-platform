@@ -9,7 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { getUser } from "~/api/api.server";
+import { getCurrentUser } from "~/api/api.server";
 import { Toaster } from "~/components/ui/sonner";
 
 export const links: Route.LinksFunction = () => [
@@ -45,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const user = await getUser(request);
+  const user = await getCurrentUser(request);
   return { user };
 }
 

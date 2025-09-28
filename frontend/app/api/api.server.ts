@@ -2,7 +2,8 @@ import { data } from "react-router";
 import type { User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
-import type { LoginData, SignupData } from "~/api/api-schemas";
+import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
+import type { User1 } from "~/api/api-types";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -102,7 +103,7 @@ export async function logOut(req: Request) {
   }
 }
 
-export async function getUser(req: Request) {
+export async function getCurrentUser(req: Request) {
   //TODO: Only get the payload-token cookie
   const requestCookie = req.headers.get("Cookie");
   const url = buildUrl(BASE_URL, "api/users/me");
@@ -116,7 +117,7 @@ export async function getUser(req: Request) {
     throw data({ jsonData }, { status: response.status });
   }
 
-  return jsonData.user as User | null;
+  return jsonData.user as User1 | null;
 }
 
 export async function verify(token: string) {
@@ -131,4 +132,8 @@ export async function verify(token: string) {
   if (!response.ok) {
     throw data({ jsonData }, { status: response.status });
   }
+}
+
+export async function editUser(req: Request, data: EditUserData) {
+  console.log("data", data);
 }

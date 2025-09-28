@@ -25,19 +25,20 @@ export default function Header({
         className,
       )}
     >
-      <Container className="h-full flex items-center gap-4">
-        <Link className="text-xl text-white font-bold leading-tight" to="/">
+      <Container className="h-full flex justify-end items-center gap-4">
+        <Link
+          className="text-xl text-white font-bold leading-tight mr-auto"
+          to="/"
+        >
           {PLATFORM_NAME}
         </Link>
 
-        <ButtonLink
-          variant="primary-foreground-outline"
-          className="ml-auto"
-          to="/edit-profile"
-        >
-          <User />
-          Profile
-        </ButtonLink>
+        {user && (
+          <ButtonLink variant="primary-foreground-outline" to="/edit-profile">
+            <User />
+            Profile
+          </ButtonLink>
+        )}
         {user ? (
           <Form method="POST" action="logout">
             <Button variant="primary-foreground-outline">

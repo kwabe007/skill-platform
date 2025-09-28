@@ -14,3 +14,16 @@ export const loginSchema = z.object({
   password: nonEmptyStringSchema,
 });
 export type LoginData = z.infer<typeof loginSchema>;
+
+export const editUserSchema = z.object({
+  fullName: z.string(),
+  company: z
+    .object({
+      name: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
+  offeredSkills: nonEmptyStringSchema.array().optional(),
+  neededSkills: nonEmptyStringSchema.array().optional(),
+});
+export type EditUserData = z.infer<typeof editUserSchema>;
