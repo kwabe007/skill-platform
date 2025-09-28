@@ -1,7 +1,7 @@
 import { cn } from "~/lib/utils";
 import Container from "~/components/Container";
 import ButtonLink from "~/components/ButtonLink";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, User } from "lucide-react";
 import { Form, Link } from "react-router";
 import { PLATFORM_NAME, useOptionalUser } from "~/utils";
 import { Button } from "~/components/ui/button";
@@ -25,10 +25,19 @@ export default function Header({
         className,
       )}
     >
-      <Container className="h-full flex items-center justify-between">
+      <Container className="h-full flex items-center gap-4">
         <Link className="text-xl text-white font-bold leading-tight" to="/">
           {PLATFORM_NAME}
         </Link>
+
+        <ButtonLink
+          variant="primary-foreground-outline"
+          className="ml-auto"
+          to="/edit-profile"
+        >
+          <User />
+          Profile
+        </ButtonLink>
         {user ? (
           <Form method="POST" action="logout">
             <Button variant="primary-foreground-outline">
