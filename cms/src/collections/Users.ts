@@ -49,13 +49,13 @@ export const Users: CollectionConfig = {
       required: true,
     },
     {
-      name: "skillsOffered",
+      name: "offeredSkills",
       type: "relationship",
       relationTo: "skills",
       hasMany: true,
     },
     {
-      name: "skillsNeeded",
+      name: "neededSkills",
       type: "relationship",
       relationTo: "skills",
       hasMany: true,

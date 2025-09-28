@@ -122,8 +122,8 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   fullName: string;
-  skillsOffered?: (number | Skill)[] | null;
-  skillsNeeded?: (number | Skill)[] | null;
+  offeredSkills?: (number | Skill)[] | null;
+  neededSkills?: (number | Skill)[] | null;
   company?: {
     name?: string | null;
     description?: string | null;
@@ -244,8 +244,8 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   fullName?: T;
-  skillsOffered?: T;
-  skillsNeeded?: T;
+  offeredSkills?: T;
+  neededSkills?: T;
   company?:
     | T
     | {
