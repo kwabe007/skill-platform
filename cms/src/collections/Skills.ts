@@ -10,6 +10,7 @@ export const Skills: CollectionConfig = {
       name: "name",
       type: "text",
       required: true,
+      unique: true,
     },
   ],
 };
