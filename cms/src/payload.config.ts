@@ -24,6 +24,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Skills],
   editor: lexicalEditor(),
+  defaultDepth: 1,
   email:
     process.env.DISABLE_EMAIL !== "true"
       ? nodemailerAdapter({
