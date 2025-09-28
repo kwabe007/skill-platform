@@ -3,17 +3,22 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "~/components/ui/input";
 import { type ComponentProps, type ComponentType, useId } from "react";
 import { keyToLabel } from "~/utils";
+import { Textarea } from "~/components/ui/textarea";
+import { match } from "ts-pattern";
+import * as React from "react";
 
-interface StandardInputWithLabelProps extends ComponentProps<typeof Input> {
+type StandardInputWithLabelProps = {
+  as?: "input" | "textarea";
   label?: string;
   icon?: ComponentType<{ className?: string }>;
   info?: string;
   errorMessage?: string;
   inputClassName?: string;
-  className?: string;
-}
+} & ComponentProps<typeof Input> &
+  ComponentProps<typeof Textarea>;
 
 export default function StandardInputWithLabel({
+  as = "input",
   id: _id,
   name,
   icon: Icon,
@@ -53,16 +58,32 @@ export default function StandardInputWithLabel({
         {Icon && (
           <Icon className="absolute left-3 top-[0.6rem] w-4 h-4 text-muted-foreground" />
         )}
-        <Input
-          {...inputPropsRest}
-          className={cn(inputClassName, Icon && "pl-10")}
-          id={id}
-          name={name}
-          aria-describedby={
-            describedByIds.length > 0 ? describedByIds.join(" ") : undefined
-          }
-          aria-invalid={!!errorMessage}
-        />
+        {match(as)
+          .with("input", () => (
+            <Input
+              {...inputPropsRest}
+              className={cn(inputClassName, Icon && "pl-10")}
+              id={id}
+              name={name}
+              aria-describedby={
+                describedByIds.length > 0 ? describedByIds.join(" ") : undefined
+              }
+              aria-invalid={!!errorMessage}
+            />
+          ))
+          .with("textarea", () => (
+            <Textarea
+              {...inputPropsRest}
+              className={cn(inputClassName, Icon && "pl-10")}
+              id={id}
+              name={name}
+              aria-describedby={
+                describedByIds.length > 0 ? describedByIds.join(" ") : undefined
+              }
+              aria-invalid={!!errorMessage}
+            />
+          ))
+          .exhaustive()}
       </div>
       {info && (
         <div className="text-sm text-muted-foreground" id={infoId}>

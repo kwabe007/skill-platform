@@ -8,7 +8,7 @@ const textVariants = cva("", {
     variant: {
       default: "",
       h1: "text-4xl font-extrabold tracking-tight text-balance",
-      h2: "border-b pb-2 text-3xl font-semibold tracking-tight",
+      h2: "text-3xl font-semibold tracking-tight",
       h3: "text-2xl font-semibold tracking-tight",
       h4: "text-xl font-semibold tracking-tight",
       p: "leading-7",
