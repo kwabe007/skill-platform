@@ -1,9 +1,10 @@
 import { data } from "react-router";
-import type { User } from "@payload-types";
+import type { Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
 import type { User1 } from "~/api/api-types";
+import { match } from "ts-pattern";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -134,6 +135,48 @@ export async function verify(token: string) {
   }
 }
 
-export async function editUser(req: Request, data: EditUserData) {
-  console.log("data", data);
+export async function editUser(req: Request, editUserData: EditUserData) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, "api/skills/add-many");
+  const offeredSkills = await match(editUserData.offeredSkills)
+    .when(
+      (offeredSkills) => offeredSkills.length > 0,
+      async (offeredSkills) => {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: requestCookie ? { Cookie: requestCookie } : undefined,
+          body: JSON.stringify({ offeredSkills, neededSkills: [] }),
+        });
+        const jsonData = await response.json();
+        if (!response.ok) {
+          throw data({ jsonData }, { status: response.status });
+        }
+        return jsonData.skills as Skill[];
+      },
+    )
+    .otherwise(async () => []);
+}
+
+export async function getExistingSkills(
+  req: Request,
+  values: string,
+  limit = 0,
+) {
+  const url = buildUrl(
+    BASE_URL,
+    `api/skills?where[name][in]=${encodeURIComponent(values)}&limit=${limit}`,
+  );
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const response = await fetch(url, {
+    method: "GET",
+    headers: requestCookie ? { Cookie: requestCookie } : undefined,
+  });
+  const jsonData = await response.json();
+
+  if (!response.ok) {
+    throw data({ jsonData }, { status: response.status });
+  }
+  return jsonData.docs as Skill[];
 }

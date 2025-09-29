@@ -23,7 +23,7 @@ export const editUserSchema = z.object({
       description: z.string().optional(),
     })
     .optional(),
-  offeredSkills: nonEmptyStringSchema.array().optional(),
-  neededSkills: nonEmptyStringSchema.array().optional(),
+  offeredSkills: nonEmptyStringSchema.array(),
+  neededSkills: nonEmptyStringSchema.array(),
 });
 export type EditUserData = z.infer<typeof editUserSchema>;

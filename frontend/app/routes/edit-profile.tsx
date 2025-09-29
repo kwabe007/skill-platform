@@ -43,17 +43,11 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   // Remove excess whitespace from skills string and turn into list of skill names.
-  const offeredSkills = result.data.offeredSkills
-    ?.trim()
-    .replace(/\s*,/g, ",")
-    .replace(/,\s*/g, ",")
-    .split(",");
+  const offeredSkills =
+    result.data.offeredSkills?.split(",").filter(Boolean) ?? [];
 
-  const neededSkills = result.data.neededSkills
-    ?.trim()
-    .replace(/\s*,/g, ",")
-    .replace(/,\s*/g, ",")
-    .split(",");
+  const neededSkills =
+    result.data.neededSkills?.split(",").filter(Boolean) ?? [];
 
   await editUser(request, { ...result.data, offeredSkills, neededSkills });
 
@@ -93,7 +87,6 @@ export default function EditProfileRoute() {
               connect with you.
             </p>
           </div>
-          <div>{form.formState.isDirty ? "dirty" : "clean"}</div>
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2 text-primary">
