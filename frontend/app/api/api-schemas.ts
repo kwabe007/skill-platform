@@ -20,7 +20,10 @@ export const editUserSchema = z.object({
   company: z
     .object({
       name: z.string().optional(),
-      description: z.string().optional(),
+      description: z
+        .string()
+        .max(500, "Company description needs to be max 500 characters")
+        .optional(),
     })
     .optional(),
   offeredSkills: nonEmptyStringSchema.array(),

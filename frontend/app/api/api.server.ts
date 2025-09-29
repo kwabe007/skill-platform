@@ -135,48 +135,55 @@ export async function verify(token: string) {
   }
 }
 
-export async function editUser(req: Request, editUserData: EditUserData) {
-  //TODO: Only get the payload-token cookie
-  const requestCookie = req.headers.get("Cookie");
-  const url = buildUrl(BASE_URL, "api/skills/add-many");
-  const offeredSkills = await match(editUserData.offeredSkills)
-    .when(
-      (offeredSkills) => offeredSkills.length > 0,
-      async (offeredSkills) => {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: requestCookie ? { Cookie: requestCookie } : undefined,
-          body: JSON.stringify({ offeredSkills, neededSkills: [] }),
-        });
-        const jsonData = await response.json();
-        if (!response.ok) {
-          throw data({ jsonData }, { status: response.status });
-        }
-        return jsonData.skills as Skill[];
-      },
-    )
-    .otherwise(async () => []);
-}
-
-export async function getExistingSkills(
+export async function editUser(
   req: Request,
-  values: string,
-  limit = 0,
+  userId: number,
+  editUserData: EditUserData,
 ) {
-  const url = buildUrl(
-    BASE_URL,
-    `api/skills?where[name][in]=${encodeURIComponent(values)}&limit=${limit}`,
-  );
+  const offeredSkills =
+    editUserData.offeredSkills.length > 0
+      ? await addManySkills(req, editUserData.offeredSkills)
+      : [];
+
+  const neededSkills =
+    editUserData.neededSkills.length > 0
+      ? await addManySkills(req, editUserData.neededSkills)
+      : [];
+
+  const updatedEditUserData = { ...editUserData, offeredSkills, neededSkills };
   //TODO: Only get the payload-token cookie
   const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, `api/users/${userId}`);
   const response = await fetch(url, {
-    method: "GET",
-    headers: requestCookie ? { Cookie: requestCookie } : undefined,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify(updatedEditUserData),
   });
   const jsonData = await response.json();
-
   if (!response.ok) {
     throw data({ jsonData }, { status: response.status });
   }
-  return jsonData.docs as Skill[];
+  return jsonData.doc as User1;
+}
+
+export async function addManySkills(req: Request, skills: string[]) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, "api/skills/add-many");
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify({ skills }),
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    throw data({ jsonData }, { status: response.status });
+  }
+  return jsonData.skills as Skill[];
 }

@@ -70,6 +70,7 @@ export const Users: CollectionConfig = {
         },
         {
           name: "description",
+          maxLength: 500,
           type: "textarea",
         },
       ],

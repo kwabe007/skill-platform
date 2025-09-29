@@ -53,8 +53,7 @@ export const Skills: CollectionConfig = {
         const jsonData = await req.json?.();
 
         const dataSchema = z.object({
-          neededSkills: z.string().min(1).array(),
-          offeredSkills: z.string().min(1).array(),
+          skills: z.string().min(1).array(),
         });
 
         const result = dataSchema.safeParse(jsonData);
@@ -76,18 +75,17 @@ export const Skills: CollectionConfig = {
         }
 
         // Normalize and slugify skill names
-        const offeredSkills = normalizeAndAddSlugs(result.data.offeredSkills);
-        const neededSkills = normalizeAndAddSlugs(result.data.neededSkills);
+        const skills = normalizeAndAddSlugs(result.data.skills);
 
         // Filter out skills that don't already exist in the database
         const { docs: existingSkills } = await req.payload.find({
           collection: "skills",
-          where: { slug: { in: offeredSkills.map((skill) => skill.slug) } },
-          limit: offeredSkills.length,
+          where: { slug: { in: skills.map((skill) => skill.slug) } },
+          limit: skills.length,
           pagination: false,
         });
         const existingSkillSlugs = existingSkills.map((skill) => skill.slug);
-        const newSkills = offeredSkills.filter((skill) => !existingSkillSlugs.includes(skill.slug));
+        const newSkills = skills.filter((skill) => !existingSkillSlugs.includes(skill.slug));
 
         // Create skills that don't already exist
         const createdSkills = await Promise.all(

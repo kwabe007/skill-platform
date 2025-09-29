@@ -14,8 +14,8 @@ import { Button } from "~/components/ui/button";
 import { editUserSchema } from "~/api/api-schemas";
 
 const editUserFormSchema = editUserSchema.extend({
-  offeredSkills: z.string().optional(),
-  neededSkills: z.string().optional(),
+  offeredSkills: z.string(),
+  neededSkills: z.string(),
 });
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -49,7 +49,11 @@ export async function action({ request }: Route.ActionArgs) {
   const neededSkills =
     result.data.neededSkills?.split(",").filter(Boolean) ?? [];
 
-  await editUser(request, { ...result.data, offeredSkills, neededSkills });
+  await editUser(request, user.id, {
+    ...result.data,
+    offeredSkills,
+    neededSkills,
+  });
 
   return { user };
 }
@@ -116,16 +120,16 @@ export default function EditProfileRoute() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <StandardInputWithLabel
+              <ValidatedInputWithLabel
                 as="textarea"
-                name="offeredSkills"
+                scope={form.scope("offeredSkills")}
                 label="Skills you offer"
                 placeholder="e.g., Web Development, Marketing, Design, Legal Services"
                 info="Comma-separated list of skills and services you can provide to other startups."
               />
-              <StandardInputWithLabel
+              <ValidatedInputWithLabel
                 as="textarea"
-                name="neededSkills"
+                scope={form.scope("neededSkills")}
                 label="Skills you need"
                 placeholder="e.g., Social Media, SEO, Accounting, Video Production"
                 info="Comma-separated list of skills and services you need from other startups."
@@ -137,10 +141,11 @@ export default function EditProfileRoute() {
       </Container>
       <div className="sticky bottom-0 left-0 right-0 flex justify-center bg-background border-t py-8">
         <Button
+          asChild
           className="bg-gradient-primary"
           disabled={!form.formState.isDirty}
         >
-          <label htmlFor="submit-form" tabIndex={0}>
+          <label className="cursor-pointer" htmlFor="submit-form" tabIndex={0}>
             Save
           </label>
         </Button>
