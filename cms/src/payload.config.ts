@@ -9,7 +9,7 @@ import sharp from "sharp";
 
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
-import { Skills } from "@/collections/Skills";
+import { Skills } from "@/collections/skills/Skills";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 
 const filename = fileURLToPath(import.meta.url);

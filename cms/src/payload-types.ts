@@ -155,6 +155,7 @@ export interface User {
 export interface Skill {
   id: number;
   name: string;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -295,6 +296,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface SkillsSelect<T extends boolean = true> {
   name?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
