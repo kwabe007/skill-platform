@@ -1,7 +1,7 @@
 import Text from "~/components/Text";
 import Container from "~/components/Container";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import { Hammer, User } from "lucide-react";
+import { ArrowLeft, Hammer, User } from "lucide-react";
 import type { Route } from "./+types/edit-profile";
 import { editUser, getCurrentUser } from "~/api/api.server";
 import { data, redirect, useLoaderData } from "react-router";
@@ -12,6 +12,7 @@ import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 import { Button } from "~/components/ui/button";
 import { editUserSchema } from "~/api/api-schemas";
 import { toast } from "sonner";
+import ButtonLink from "~/components/ButtonLink";
 
 const editUserFormSchema = editUserSchema.extend({
   offeredSkills: z.string(),
@@ -96,7 +97,11 @@ export default function EditProfileRoute() {
   return (
     <div>
       <Container className="max-w-xl py-16">
-        <form {...form.getFormProps()} className="space-y-8">
+        <ButtonLink variant="outline" to="/">
+          <ArrowLeft />
+          Back to home
+        </ButtonLink>
+        <form {...form.getFormProps()} className="space-y-8 mt-4">
           <div className="text-center">
             <Text as="h1" variant="h2">
               Edit your profile
