@@ -74,7 +74,12 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    skills: {
+      offeredUsers: 'users';
+      neededUsers: 'users';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -121,6 +126,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  role: 'admin' | 'member' | 'app';
   fullName: string;
   offeredSkills?: (number | Skill)[] | null;
   neededSkills?: (number | Skill)[] | null;
@@ -130,6 +136,9 @@ export interface User {
   };
   updatedAt: string;
   createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
   email: string;
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
@@ -156,6 +165,16 @@ export interface Skill {
   id: number;
   name: string;
   slug: string;
+  offeredUsers?: {
+    docs?: (number | User)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  neededUsers?: {
+    docs?: (number | User)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -244,6 +263,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   fullName?: T;
   offeredSkills?: T;
   neededSkills?: T;
@@ -255,6 +275,9 @@ export interface UsersSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
   email?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;
@@ -297,6 +320,8 @@ export interface MediaSelect<T extends boolean = true> {
 export interface SkillsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
+  offeredUsers?: T;
+  neededUsers?: T;
   updatedAt?: T;
   createdAt?: T;
 }

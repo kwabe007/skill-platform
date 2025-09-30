@@ -6,6 +6,9 @@ const COLLECTION_SLUG = "skills" as const;
 
 export const Skills: CollectionConfig = {
   slug: COLLECTION_SLUG,
+  access: {
+    read: () => true,
+  },
   admin: {
     useAsTitle: "name",
   },
@@ -24,6 +27,18 @@ export const Skills: CollectionConfig = {
       admin: {
         readOnly: true, // don’t let admins edit manually
       },
+    },
+    {
+      name: "offeredUsers",
+      type: "join",
+      collection: "users",
+      on: "offeredSkills",
+    },
+    {
+      name: "neededUsers",
+      type: "join",
+      collection: "users",
+      on: "neededSkills",
     },
   ],
   hooks: {

@@ -1,13 +1,23 @@
 import { CollectionConfig, ValidationError } from "payload";
 import invariant from "tiny-invariant";
+import { adminOnly, adminOnlyField, currentUserAppAdmin } from "@/collections/access-control";
 
 export const Users: CollectionConfig = {
   slug: "users",
-  access: { create: () => true },
+  access: {
+    create: () => true,
+    read: currentUserAppAdmin,
+    update: currentUserAppAdmin,
+    delete: currentUserAppAdmin,
+    admin: adminOnly,
+    unlock: adminOnly,
+    readVersions: adminOnly,
+  },
   admin: {
     useAsTitle: "email",
   },
   auth: {
+    useAPIKey: true,
     verify: {
       generateEmailHTML: ({ req, token, user }) => {
         invariant(
@@ -44,9 +54,23 @@ export const Users: CollectionConfig = {
   },
   fields: [
     {
+      name: "role",
+      type: "select",
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "Member", value: "member" },
+        { label: "App", value: "app" },
+      ],
+      required: true,
+      access: adminOnlyField,
+    },
+    {
       name: "fullName",
       type: "text",
       required: true,
+      access: {
+        read: () => true,
+      },
     },
     {
       name: "offeredSkills",
