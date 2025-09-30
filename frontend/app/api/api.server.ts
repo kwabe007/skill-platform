@@ -4,7 +4,6 @@ import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
 import type { User1 } from "~/api/api-types";
-import { match } from "ts-pattern";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -186,4 +185,22 @@ export async function addManySkills(req: Request, skills: string[]) {
     throw data({ jsonData }, { status: response.status });
   }
   return jsonData.skills as Skill[];
+}
+
+export async function getSkills() {
+  const url = buildUrl(BASE_URL, "api/skills?joins[offeredSkills]");
+  invariant(process.env.PAYLOAD_API_KEY);
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `users API-Key ${process.env.PAYLOAD_API_KEY}`,
+    },
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error in getting skills, returning empty array, status: ${response.status}`,
+    );
+    return [] as Skill[];
+  }
+  return jsonData.docs as Skill[];
 }

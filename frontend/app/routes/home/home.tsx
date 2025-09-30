@@ -4,13 +4,15 @@ import type { Route } from "./+types/home";
 import { toastCookieSerializer } from "~/cookie-serializers.server";
 import { data, useLoaderData } from "react-router";
 import { useSuccessToast } from "~/utils";
+import { getSkills } from "~/api/api.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
+  const skills = await getSkills();
   const showToast =
     (await toastCookieSerializer.parse(cookieHeader)) === "true";
   return data(
-    { showToast },
+    { showToast, skills },
     {
       headers: {
         ...(showToast
@@ -26,7 +28,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function Home() {
-  const { showToast } = useLoaderData<typeof loader>();
+  const { showToast, skills } = useLoaderData<typeof loader>();
   useSuccessToast(
     showToast,
     "Your email address is now verified and you can now log in!",
@@ -54,7 +56,7 @@ export default function Home() {
             </p>
           </div>
           <div className="">
-            <SkillDiscovery />
+            <SkillDiscovery skills={skills} />
           </div>
         </Container>
       </section>

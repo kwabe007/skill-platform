@@ -76,3 +76,11 @@ export function keyToLabel(str: string): string {
       .replace(/\b\w/g, (c, i) => (i === 0 ? c : c.toLowerCase()))
   );
 }
+
+export function pluralize(
+  count: number,
+  singular: string,
+  plural = singular + "s",
+) {
+  return `${count} ${count === 1 ? singular : plural}`;
+}
