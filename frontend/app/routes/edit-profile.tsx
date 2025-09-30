@@ -2,7 +2,6 @@ import Text from "~/components/Text";
 import Container from "~/components/Container";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Hammer, User } from "lucide-react";
-import StandardInputWithLabel from "~/components/StandardInputWithLabel";
 import type { Route } from "./+types/edit-profile";
 import { editUser, getCurrentUser } from "~/api/api.server";
 import { data, redirect, useLoaderData } from "react-router";
@@ -12,6 +11,7 @@ import type { Skill } from "@payload-types";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 import { Button } from "~/components/ui/button";
 import { editUserSchema } from "~/api/api-schemas";
+import { toast } from "sonner";
 
 const editUserFormSchema = editUserSchema.extend({
   offeredSkills: z.string(),
@@ -58,6 +58,8 @@ export async function action({ request }: Route.ActionArgs) {
   return { user };
 }
 
+/* TODO: change layout to small cards for each details (about, skills, etc.) and when card is clicked, open up sheet
+    overlay to edit clicked detail */
 //TODO: Add color to cards
 export default function EditProfileRoute() {
   const { user } = useLoaderData<typeof loader>();
@@ -75,6 +77,19 @@ export default function EditProfileRoute() {
       company: user.company,
       offeredSkills: skillsToString(user.offeredSkills),
       neededSkills: skillsToString(user.neededSkills),
+    },
+    onSubmitSuccess: () => {
+      form.resetForm({
+        ...user,
+        offeredSkills: skillsToString(user.offeredSkills),
+        neededSkills: skillsToString(user.neededSkills),
+      });
+
+      const position =
+        document.documentElement.clientWidth > 1024
+          ? "bottom-right"
+          : "top-center";
+      toast.success("Your profile has been updated!", { position });
     },
   });
 
@@ -140,14 +155,18 @@ export default function EditProfileRoute() {
         </form>
       </Container>
       <div className="sticky bottom-0 left-0 right-0 flex justify-center bg-background border-t py-8">
-        <Button
-          asChild
-          className="bg-gradient-primary"
-          disabled={!form.formState.isDirty}
-        >
-          <label className="cursor-pointer" htmlFor="submit-form" tabIndex={0}>
-            Save
-          </label>
+        <Button asChild className="bg-gradient-primary">
+          {form.formState.isDirty ? (
+            <label
+              className="cursor-pointer"
+              htmlFor="submit-form"
+              tabIndex={0}
+            >
+              Save
+            </label>
+          ) : (
+            <label className="pointer-events-none opacity-50">Save</label>
+          )}
         </Button>
       </div>
     </div>
