@@ -46,7 +46,7 @@ export default function StartupOfferingsRoute() {
               {offeredCount}
             </Badge>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
+          <div className="grid items-start md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
             {skill.offeredUsers.docs.map((user, index) => (
               <StartupCard
                 key={index}

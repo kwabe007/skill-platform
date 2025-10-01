@@ -13,7 +13,6 @@ import type { PublicUser1 } from "~/api/api-types";
 import { useId, useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import type { Skill } from "@payload-types";
 
 interface StartupCardProps {
   user: PublicUser1;
@@ -68,7 +67,7 @@ export default function StartupCard({
         </div>
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
             {user.offeredSkills.map((skill, index) => (
               <Badge
                 key={skill.id}
@@ -84,7 +83,7 @@ export default function StartupCard({
         </div>
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Needs:</h4>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
             {user.neededSkills.map((skill, index) => (
               <Badge
                 key={skill.id}
