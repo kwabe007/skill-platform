@@ -10,16 +10,33 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
 import { Building2, MessageSquare, Send } from "lucide-react";
-import defaultMessage from "./messageMockText.json";
+import defaultMessageTemplate from "./messageMockText.json";
 import { Textarea } from "~/components/ui/textarea";
+import type { PublicUser1 } from "~/api/api-types";
+
+function replaceTemplateStringVariables(
+  str: string,
+  variables: Record<string, string>,
+) {
+  let newString = str;
+  Object.entries(variables).forEach(([key, value]) => {
+    newString = newString.replace(`{${key}}`, value);
+  });
+  return newString;
+}
 
 interface ConnectModalProps {
+  user: PublicUser1;
   className?: string;
 }
 
-export default function ConnectModal({ className }: ConnectModalProps) {
+export default function ConnectModal({ user, className }: ConnectModalProps) {
+  const defaultMessage = replaceTemplateStringVariables(
+    defaultMessageTemplate,
+    { companyName: user.company?.name! },
+  );
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,11 +51,12 @@ export default function ConnectModal({ className }: ConnectModalProps) {
             <div className="p-2 rounded-lg bg-gradient-primary">
               <Building2 className="size-5 text-primary-foreground" />
             </div>
-            <DialogTitle>Connect with CloudScale Infrastructure</DialogTitle>
+            <DialogTitle>Connect with {user.company?.name}</DialogTitle>
           </div>
           <DialogDescription>
-            Send a personalized message to start a conversation with TechFlow
-            Solutions. You can customize the message below before sending.
+            Send a personalized message to start a conversation with{" "}
+            {user.company?.name}. You can customize the message below before
+            sending.
           </DialogDescription>
         </DialogHeader>
 

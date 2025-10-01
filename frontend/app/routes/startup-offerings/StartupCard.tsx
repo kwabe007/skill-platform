@@ -25,8 +25,6 @@ export default function StartupCard({
   highlightedSkillId,
   className,
 }: StartupCardProps) {
-  const offers = ["Cloud Infrastructure", "DevOps"];
-  const needs = ["Frontend Development", "UI/UX Design"];
   const [expanded, setExpanded] = useState(false);
 
   const id = useId();
@@ -100,7 +98,7 @@ export default function StartupCard({
       </CardContent>
 
       <CardFooter as="footer" className="mt-2">
-        <ConnectModal />
+        <ConnectModal user={user} />
       </CardFooter>
     </Card>
   );
