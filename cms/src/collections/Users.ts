@@ -5,6 +5,7 @@ import { adminOnly, adminOnlyField, currentUserAppAdmin } from "@/collections/ac
 export const Users: CollectionConfig = {
   slug: "users",
   access: {
+    // TODO-SECURITY: Create user needs to be set to app or admin only
     create: () => true,
     read: currentUserAppAdmin,
     update: currentUserAppAdmin,
@@ -63,6 +64,7 @@ export const Users: CollectionConfig = {
       ],
       required: true,
       access: adminOnlyField,
+      defaultValue: "member",
     },
     {
       name: "fullName",
