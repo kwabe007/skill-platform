@@ -14,6 +14,7 @@ import { Building2, MessageSquare, Send } from "lucide-react";
 import defaultMessageTemplate from "./messageMockText.json";
 import { Textarea } from "~/components/ui/textarea";
 import type { PublicUser1 } from "~/api/api-types";
+import { useOptionalUser } from "~/utils";
 
 function replaceTemplateStringVariables(
   str: string,
@@ -31,11 +32,16 @@ interface ConnectModalProps {
   className?: string;
 }
 
-export default function ConnectModal({ user, className }: ConnectModalProps) {
+export default function ConnectModal({
+  user: receiverUser,
+  className,
+}: ConnectModalProps) {
   const defaultMessage = replaceTemplateStringVariables(
     defaultMessageTemplate,
-    { companyName: user.company?.name! },
+    { companyName: receiverUser.company?.name! },
   );
+
+  const user = useOptionalUser();
 
   return (
     <Dialog>
@@ -51,12 +57,12 @@ export default function ConnectModal({ user, className }: ConnectModalProps) {
             <div className="p-2 rounded-lg bg-gradient-primary">
               <Building2 className="size-5 text-primary-foreground" />
             </div>
-            <DialogTitle>Connect with {user.company?.name}</DialogTitle>
+            <DialogTitle>Connect with {receiverUser.company?.name}</DialogTitle>
           </div>
           <DialogDescription>
             Send a personalized message to start a conversation with{" "}
-            {user.company?.name}. You can customize the message below before
-            sending.
+            {receiverUser.company?.name}. You can customize the message below
+            before sending.
           </DialogDescription>
         </DialogHeader>
 

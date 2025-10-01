@@ -13,6 +13,8 @@ import type { PublicUser1 } from "~/api/api-types";
 import { useId, useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
+import { useOptionalUser } from "~/utils";
+import LoginPromptModal from "~/routes/startup-offerings/LoginPromptModal";
 
 interface StartupCardProps {
   user: PublicUser1;
@@ -21,13 +23,13 @@ interface StartupCardProps {
 }
 
 export default function StartupCard({
-  user,
+  user: cardUser,
   highlightedSkillId,
   className,
 }: StartupCardProps) {
   const [expanded, setExpanded] = useState(false);
-
   const id = useId();
+  const user = useOptionalUser();
 
   return (
     /* TODO: Add visual feedback box shadow on card hover */
@@ -38,7 +40,7 @@ export default function StartupCard({
             <Building2 className="w-5 h-5 text-primary-foreground" />
           </div>
           <CardTitle as="h3" className="text-lg font-semibold">
-            {user.company?.name}
+            {cardUser.company?.name}
           </CardTitle>
         </div>
       </CardHeader>
@@ -52,7 +54,7 @@ export default function StartupCard({
             )}
             id={id}
           >
-            {user.company?.description}
+            {cardUser.company?.description}
           </p>
           <Button
             className="relative px-0! mt-2 text-muted-foreground "
@@ -66,7 +68,7 @@ export default function StartupCard({
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
           <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
-            {user.offeredSkills.map((skill, index) => (
+            {cardUser.offeredSkills.map((skill, index) => (
               <Badge
                 key={skill.id}
                 variant={
@@ -82,7 +84,7 @@ export default function StartupCard({
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Needs:</h4>
           <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
-            {user.neededSkills.map((skill, index) => (
+            {cardUser.neededSkills.map((skill, index) => (
               <Badge
                 key={skill.id}
                 variant={
@@ -98,7 +100,7 @@ export default function StartupCard({
       </CardContent>
 
       <CardFooter as="footer" className="mt-2">
-        <ConnectModal user={user} />
+        {user ? <ConnectModal user={cardUser} /> : <LoginPromptModal />}
       </CardFooter>
     </Card>
   );
