@@ -3,7 +3,7 @@ import type { Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
-import type { User1 } from "~/api/api-types";
+import type { Skill1Public, User0Public, User1 } from "~/api/api-types";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -187,7 +187,7 @@ export async function addManySkills(req: Request, skills: string[]) {
   return jsonData.skills as Skill[];
 }
 
-export async function getSkills() {
+export async function getSkills(): Promise<Skill1Public[]> {
   const url = buildUrl(BASE_URL, "api/skills?joins[offeredSkills]");
   invariant(process.env.PAYLOAD_API_KEY);
   const response = await fetch(url, {
@@ -200,7 +200,24 @@ export async function getSkills() {
     console.error(
       `Error in getting skills, returning empty array, status: ${response.status}`,
     );
-    return [] as Skill[];
+    return [];
   }
-  return jsonData.docs as Skill[];
+
+  return jsonData.docs.map((skill: any) => {
+    const offeredUsersDocs = skill.offeredUsers.docs.map((user: any) => ({
+      fullName: user.fullName,
+      company: user.company,
+    }));
+
+    const neededUsersDocs = skill.neededUsers.docs.map((user: any) => ({
+      fullName: user.fullName,
+      company: user.company,
+    }));
+
+    return {
+      ...skill,
+      offeredUsers: { ...skill.offeredUsers, docs: offeredUsersDocs },
+      neededUsers: { ...skill.neededUsers, docs: neededUsersDocs },
+    } as Skill1Public;
+  });
 }

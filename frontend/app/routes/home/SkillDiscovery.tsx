@@ -1,11 +1,11 @@
 import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Link } from "react-router";
-import type { Skill } from "@payload-types";
 import { pluralize } from "~/utils";
+import type { Skill1Public } from "~/api/api-types";
 
 interface SkillDiscoveryProps {
-  skills: Skill[];
+  skills: Skill1Public[];
 }
 
 export default function SkillDiscovery({ skills }: SkillDiscoveryProps) {
