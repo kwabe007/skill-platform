@@ -18,12 +18,12 @@ export type User0 = Omit<User, "offeredSkills" | "neededSkills"> & {
 
 export type PublicUser0 = Pick<
   User0,
-  "fullName" | "company" | "offeredSkills" | "neededSkills"
+  "id" | "fullName" | "company" | "offeredSkills" | "neededSkills"
 >;
 
 export type PublicUser1 = Pick<
   User1,
-  "fullName" | "company" | "offeredSkills" | "neededSkills"
+  "id" | "fullName" | "company" | "offeredSkills" | "neededSkills"
 >;
 
 /**

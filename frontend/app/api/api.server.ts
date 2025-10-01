@@ -199,6 +199,7 @@ export async function addManySkills(req: Request, skills: string[]) {
 
 function toPublicUser0(user: User0): PublicUser0 {
   return {
+    id: user.id,
     fullName: user.fullName,
     company: user.company,
     offeredSkills: user.offeredSkills,
@@ -208,6 +209,7 @@ function toPublicUser0(user: User0): PublicUser0 {
 
 function toPublicUser1(user: User1): PublicUser1 {
   return {
+    id: user.id,
     fullName: user.fullName,
     company: user.company,
     offeredSkills: user.offeredSkills as Skill0[],
