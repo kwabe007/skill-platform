@@ -3,7 +3,17 @@ import type { Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
-import type { Skill1Public, User0Public, User1 } from "~/api/api-types";
+import type {
+  PublicSkill1,
+  User0,
+  PublicUser0,
+  User1,
+  Skill1,
+  PublicSkill2,
+  Skill2,
+  PublicUser1,
+  Skill0,
+} from "~/api/api-types";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -74,7 +84,7 @@ export async function logIn(loginData: LoginData) {
     };
   }
   if (!response.ok) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
 
   return {
@@ -99,7 +109,7 @@ export async function logOut(req: Request) {
 
   const jsonData = await response.json();
   if ("errors" in jsonData) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
 }
 
@@ -114,7 +124,7 @@ export async function getCurrentUser(req: Request) {
   const jsonData = await response.json();
 
   if ("errors" in jsonData) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
 
   return jsonData.user as User1 | null;
@@ -130,7 +140,7 @@ export async function verify(token: string) {
   });
   const jsonData = await response.json();
   if (!response.ok) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
 }
 
@@ -163,7 +173,7 @@ export async function editUser(
   });
   const jsonData = await response.json();
   if (!response.ok) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
   return jsonData.doc as User1;
 }
@@ -182,13 +192,59 @@ export async function addManySkills(req: Request, skills: string[]) {
   });
   const jsonData = await response.json();
   if (!response.ok) {
-    throw data({ jsonData }, { status: response.status });
+    throw data(jsonData, { status: response.status });
   }
   return jsonData.skills as Skill[];
 }
 
-export async function getSkills(): Promise<Skill1Public[]> {
-  const url = buildUrl(BASE_URL, "api/skills?joins[offeredSkills]");
+function toPublicUser0(user: User0): PublicUser0 {
+  return {
+    fullName: user.fullName,
+    company: user.company,
+    offeredSkills: user.offeredSkills,
+    neededSkills: user.neededSkills,
+  };
+}
+
+function toPublicUser1(user: User1): PublicUser1 {
+  return {
+    fullName: user.fullName,
+    company: user.company,
+    offeredSkills: user.offeredSkills as Skill0[],
+    neededSkills: user.neededSkills as Skill0[],
+  };
+}
+
+function toPublicSkill1(skill: Skill1): PublicSkill1 {
+  return {
+    ...skill,
+    offeredUsers: {
+      ...skill.offeredUsers,
+      docs: skill.offeredUsers.docs.map(toPublicUser0),
+    },
+    neededUsers: {
+      ...skill.neededUsers,
+      docs: skill.neededUsers.docs.map(toPublicUser0),
+    },
+  };
+}
+
+function toPublicSkill2(skill: Skill2): PublicSkill2 {
+  return {
+    ...skill,
+    offeredUsers: {
+      ...skill.offeredUsers,
+      docs: skill.offeredUsers.docs.map(toPublicUser1),
+    },
+    neededUsers: {
+      ...skill.neededUsers,
+      docs: skill.neededUsers.docs.map(toPublicUser1),
+    },
+  };
+}
+
+export async function getSkills(): Promise<PublicSkill1[]> {
+  const url = buildUrl(BASE_URL, "api/skills");
   invariant(process.env.PAYLOAD_API_KEY);
   const response = await fetch(url, {
     headers: {
@@ -202,22 +258,28 @@ export async function getSkills(): Promise<Skill1Public[]> {
     );
     return [];
   }
+  return jsonData.docs.map(toPublicSkill1);
+}
 
-  return jsonData.docs.map((skill: any) => {
-    const offeredUsersDocs = skill.offeredUsers.docs.map((user: any) => ({
-      fullName: user.fullName,
-      company: user.company,
-    }));
-
-    const neededUsersDocs = skill.neededUsers.docs.map((user: any) => ({
-      fullName: user.fullName,
-      company: user.company,
-    }));
-
-    return {
-      ...skill,
-      offeredUsers: { ...skill.offeredUsers, docs: offeredUsersDocs },
-      neededUsers: { ...skill.neededUsers, docs: neededUsersDocs },
-    } as Skill1Public;
+export async function getSkill(
+  skillSlug: string,
+): Promise<PublicSkill2 | null> {
+  const url = buildUrl(
+    BASE_URL,
+    `api/skills?where[slug][equals]=${encodeURIComponent(skillSlug)}&depth=2&limit=1`,
+  );
+  invariant(process.env.PAYLOAD_API_KEY);
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `users API-Key ${process.env.PAYLOAD_API_KEY}`,
+    },
   });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    throw data(jsonData, {
+      status: response.status,
+      statusText: "Error retrieving data from CMS",
+    });
+  }
+  return jsonData.docs[0] ? toPublicSkill2(jsonData.docs[0]) : null;
 }

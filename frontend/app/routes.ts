@@ -11,8 +11,8 @@ export default [
   ]),
   layout("routes/default-layout.tsx", [
     route(
-      "startup-offerings/:skillId",
-      "routes/startup-offerings/startup-offerings-route.tsx",
+      "startup-offerings/:skillSlug",
+      "routes/startup-offerings/startup-offerings.tsx",
     ),
     route("edit-profile", "routes/edit-profile.tsx"),
   ]),

@@ -2,10 +2,10 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Link } from "react-router";
 import { pluralize } from "~/utils";
-import type { Skill1Public } from "~/api/api-types";
+import type { PublicSkill1 } from "~/api/api-types";
 
 interface SkillDiscoveryProps {
-  skills: Skill1Public[];
+  skills: PublicSkill1[];
 }
 
 export default function SkillDiscovery({ skills }: SkillDiscoveryProps) {
@@ -16,7 +16,7 @@ export default function SkillDiscovery({ skills }: SkillDiscoveryProps) {
         const neededCount = skill.neededUsers?.docs?.length ?? 0;
 
         return (
-          <Link key={skill.name} to={`/startup-offerings/test`}>
+          <Link key={skill.name} to={`/startup-offerings/${skill.slug}`}>
             <Card>
               {/* TODO: Add visual feedback box-shadow on hover */}
               <CardContent className="p-4 text-center">

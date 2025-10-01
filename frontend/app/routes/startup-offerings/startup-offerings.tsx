@@ -1,11 +1,29 @@
 import { Button } from "~/components/ui/button";
-import { Link } from "react-router";
+import { data, Link, useLoaderData } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import StartupCard from "~/routes/startup-offerings/StartupCard";
 import Container from "~/components/Container";
+import type { Route } from "./+types/startup-offerings";
+import { getSkill } from "~/api/api.server";
 
-export default function StartupOfferingsRoute() {
+export async function loader({ params }: Route.LoaderArgs) {
+  const skill = await getSkill(params.skillSlug);
+  if (!skill) {
+    throw data(null, {
+      status: 404,
+      statusText: "The skill you are looking for does not exist yet.",
+    });
+  }
+  return { skill };
+}
+
+export default function StartupOfferings() {
+  const { skill } = useLoaderData<typeof loader>();
+
+  const offeredCount = skill.offeredUsers.docs.length;
+  const neededCount = skill.neededUsers.docs.length;
+
   return (
     <div className="py-10">
       <Container>
@@ -17,35 +35,33 @@ export default function StartupOfferingsRoute() {
         </Button>
         <h1 className="mt-4">
           Explore startups offering or needing{" "}
-          <span className="font-bold">Business Intelligence</span>
+          <span className="font-bold">{skill.name}</span>
         </h1>
         <section>
           <div className="flex gap-2 mt-6">
             <h2 className="text-xl font-semibold">
-              Startups offering Business Intelligence
+              Startups offering {skill.name}
             </h2>
             <Badge className="self-center" variant="secondary">
-              2
+              {offeredCount}
             </Badge>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
-            <StartupCard />
-            <StartupCard />
+            {skill.offeredUsers.docs.map((user) => (
+              <StartupCard user={user} />
+            ))}
           </div>
         </section>
         <section>
           <div className="flex gap-2 mt-6">
             <h2 className="text-xl font-semibold">
-              Startups needing Business Intelligence
+              Startups needing {skill.name}
             </h2>
             <Badge className="self-center" variant="secondary">
-              2
+              {neededCount}
             </Badge>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
-            <StartupCard />
-            <StartupCard />
-          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4"></div>
         </section>
       </Container>
     </div>
