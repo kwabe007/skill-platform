@@ -5,25 +5,37 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Building2, MessageSquare } from "lucide-react";
+import { Building2, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { clsx } from "clsx";
 import ConnectModal from "~/routes/startup-offerings/ConnectModal";
 import type { PublicUser1 } from "~/api/api-types";
+import { useId, useState } from "react";
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import type { Skill } from "@payload-types";
 
 interface StartupCardProps {
   user: PublicUser1;
+  highlightedSkillId: number;
   className?: string;
 }
 
-export default function StartupCard({ user, className }: StartupCardProps) {
+export default function StartupCard({
+  user,
+  highlightedSkillId,
+  className,
+}: StartupCardProps) {
   const offers = ["Cloud Infrastructure", "DevOps"];
   const needs = ["Frontend Development", "UI/UX Design"];
+  const [expanded, setExpanded] = useState(false);
+
+  const id = useId();
 
   return (
     /* TODO: Add visual feedback box shadow on card hover */
-    <Card as="article" className={clsx("", className)}>
-      <CardHeader as="header" className="pb-3">
+    <Card as="article" className={clsx("gap-4", className)}>
+      <CardHeader as="header" className="gap-0">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-gradient-primary">
             <Building2 className="w-5 h-5 text-primary-foreground" />
@@ -32,17 +44,39 @@ export default function StartupCard({ user, className }: StartupCardProps) {
             {user.company?.name}
           </CardTitle>
         </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {user.company?.description}
-        </p>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <div>
+          <p
+            className={cn(
+              "text-sm text-muted-foreground leading-relaxed transition-all",
+              !expanded && "line-clamp-2",
+            )}
+            id={id}
+          >
+            {user.company?.description}
+          </p>
+          <Button
+            className="relative px-0! mt-2 text-muted-foreground "
+            variant="ghost"
+            onClick={() => setExpanded((expanded) => !expanded)}
+          >
+            {expanded ? <ChevronUp /> : <ChevronDown />}
+            Show {expanded ? "less" : "more"}
+          </Button>
+        </div>
+        <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
           <div className="flex flex-wrap gap-1.5">
             {user.offeredSkills.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
+              <Badge
+                key={skill.id}
+                variant={
+                  skill.id === highlightedSkillId ? "default" : "secondary"
+                }
+                className="rounded-full"
+              >
                 {skill.name}
               </Badge>
             ))}
@@ -52,7 +86,13 @@ export default function StartupCard({ user, className }: StartupCardProps) {
           <h4 className="text-sm font-medium text-foreground mb-2">Needs:</h4>
           <div className="flex flex-wrap gap-1.5">
             {user.neededSkills.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
+              <Badge
+                key={skill.id}
+                variant={
+                  skill.id === highlightedSkillId ? "default" : "secondary"
+                }
+                className="rounded-full"
+              >
                 {skill.name}
               </Badge>
             ))}
@@ -60,7 +100,7 @@ export default function StartupCard({ user, className }: StartupCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter as="footer">
+      <CardFooter as="footer" className="mt-2">
         <ConnectModal />
       </CardFooter>
     </Card>

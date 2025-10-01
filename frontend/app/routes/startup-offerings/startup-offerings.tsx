@@ -18,7 +18,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { skill };
 }
 
-export default function StartupOfferings() {
+export default function StartupOfferingsRoute() {
   const { skill } = useLoaderData<typeof loader>();
 
   const offeredCount = skill.offeredUsers.docs.length;
@@ -47,8 +47,12 @@ export default function StartupOfferings() {
             </Badge>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
-            {skill.offeredUsers.docs.map((user) => (
-              <StartupCard user={user} />
+            {skill.offeredUsers.docs.map((user, index) => (
+              <StartupCard
+                key={index}
+                user={user}
+                highlightedSkillId={skill.id}
+              />
             ))}
           </div>
         </section>
@@ -61,7 +65,15 @@ export default function StartupOfferings() {
               {neededCount}
             </Badge>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4"></div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
+            {skill.neededUsers.docs.map((user, index) => (
+              <StartupCard
+                key={index}
+                user={user}
+                highlightedSkillId={skill.id}
+              />
+            ))}
+          </div>
         </section>
       </Container>
     </div>
