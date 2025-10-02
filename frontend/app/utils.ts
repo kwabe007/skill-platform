@@ -30,7 +30,7 @@ export function useOptionalUser() {
   return null;
 }
 
-export function useSuccessToast(show: boolean, message: string) {
+export function useSuccessToast(show: boolean, message: string, key = "") {
   const [toastShown, setToastShown] = useState(false);
   useEffect(() => {
     if (show && !toastShown) {
@@ -39,7 +39,7 @@ export function useSuccessToast(show: boolean, message: string) {
         setToastShown(true);
       });
     }
-  }, [show]);
+  }, [show, `${message}-${key}`]);
 }
 
 /**

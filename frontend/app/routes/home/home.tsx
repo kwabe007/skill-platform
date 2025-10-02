@@ -1,38 +1,16 @@
 import SkillDiscovery from "~/routes/home/SkillDiscovery";
 import Container from "~/components/Container";
 import type { Route } from "./+types/home";
-import { toastCookieSerializer } from "~/cookie-serializers.server";
 import { data, useLoaderData } from "react-router";
-import { useSuccessToast } from "~/utils";
 import { getSkills } from "~/api/api.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const cookieHeader = request.headers.get("Cookie");
   const skills = await getSkills();
-  const showToast =
-    (await toastCookieSerializer.parse(cookieHeader)) === "true";
-  return data(
-    { showToast, skills },
-    {
-      headers: {
-        ...(showToast
-          ? {
-              "Set-Cookie": await toastCookieSerializer.serialize("", {
-                maxAge: 0,
-              }),
-            }
-          : {}),
-      },
-    },
-  );
+  return data({ skills });
 }
 
 export default function Home() {
-  const { showToast, skills } = useLoaderData<typeof loader>();
-  useSuccessToast(
-    showToast,
-    "Your email address is now verified and you can now log in!",
-  );
+  const { skills } = useLoaderData<typeof loader>();
 
   return (
     <div>

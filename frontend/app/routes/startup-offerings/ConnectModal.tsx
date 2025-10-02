@@ -14,7 +14,7 @@ import defaultMessageTemplate from "./messageMockText.json";
 import type { PublicUser1 } from "~/api/api-types";
 import { formatRelativeTime, useOptionalUser } from "~/utils";
 import ButtonLabel from "~/components/ButtonLabel";
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 import { useForm } from "@rvf/react-router";
 import { useFetcher } from "react-router";
@@ -43,6 +43,7 @@ export default function ConnectModal({
     defaultMessageTemplate,
     { companyName: receiverUser.company?.name! },
   );
+  const [isOpen, setIsOpen] = useState(false);
   const formFetcher = useFetcher();
   const connectionRequestFetcher = useFetcher<typeof loader>();
   const user = useOptionalUser();
@@ -65,15 +66,16 @@ export default function ConnectModal({
       receiver: receiverUser.id,
     },
     fetcher: formFetcher,
+    onSubmitSuccess: () => {
+      setIsOpen(false);
+    },
   });
   const existingConnectionRequest = connectionRequestFetcher.data;
 
-  const disableSubmit =
-    form.formState.submitStatus === "submitting" ||
-    form.formState.submitStatus === "success";
+  const disableSubmit = form.formState.submitStatus === "submitting";
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="w-full" type="button">
           <MessageSquare className="w-4 h-4 mr-2" />

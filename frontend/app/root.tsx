@@ -1,16 +1,21 @@
 import {
+  data,
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { getCurrentUser } from "~/api/api.server";
 import { Toaster } from "~/components/ui/sonner";
+import { readToastSession } from "~/cookie-serializers.server";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,10 +51,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getCurrentUser(request);
-  return { user };
+  const { message, headers: toastHeaders } = await readToastSession(request);
+  const toastKey = message ? Math.random().toString(36) : undefined;
+  return data({ user, message, toastKey }, { headers: toastHeaders });
 }
 
 export default function App() {
+  const { message, toastKey } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        toast.success(message);
+      });
+    }
+  }, [`${message}-${toastKey}`]);
+
   return <Outlet />;
 }
 

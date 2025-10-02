@@ -28,8 +28,6 @@ export default function StartupCard({
   highlightedSkillId,
   className,
 }: StartupCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const id = useId();
   const user = useOptionalUser();
 
   const placeHighlightedSkillsFirst = (skills: Skill0[]) => {
