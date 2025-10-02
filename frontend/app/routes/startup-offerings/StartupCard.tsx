@@ -9,7 +9,7 @@ import { Building2, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { clsx } from "clsx";
 import ConnectModal from "~/routes/startup-offerings/ConnectModal";
-import type { PublicUser1 } from "~/api/api-types";
+import type { PublicUser1, Skill0 } from "~/api/api-types";
 import { useId, useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -30,6 +30,20 @@ export default function StartupCard({
   const [expanded, setExpanded] = useState(false);
   const id = useId();
   const user = useOptionalUser();
+
+  const placeHighlightedSkillsFirst = (skills: Skill0[]) => {
+    const highlightedSkills = skills.filter(
+      (skill: Skill0) => skill.id === highlightedSkillId,
+    );
+    const otherSkills = skills.filter(
+      (skill: Skill0) => skill.id !== highlightedSkillId,
+    );
+    return [...highlightedSkills, ...otherSkills];
+  };
+  const offeredSkillsSorted = placeHighlightedSkillsFirst(
+    cardUser.offeredSkills,
+  );
+  const neededSkillsSorted = placeHighlightedSkillsFirst(cardUser.neededSkills);
 
   return (
     /* TODO: Add visual feedback box shadow on card hover */
@@ -68,7 +82,7 @@ export default function StartupCard({
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
           <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
-            {cardUser.offeredSkills.map((skill, index) => (
+            {offeredSkillsSorted.map((skill) => (
               <Badge
                 key={skill.id}
                 variant={
@@ -84,7 +98,7 @@ export default function StartupCard({
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Needs:</h4>
           <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
-            {cardUser.neededSkills.map((skill, index) => (
+            {neededSkillsSorted.map((skill) => (
               <Badge
                 key={skill.id}
                 variant={
