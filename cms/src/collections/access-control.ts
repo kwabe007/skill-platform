@@ -5,7 +5,7 @@ export const adminOnly: FieldAccess = ({ req: { user } }) => {
 };
 
 /**
- * Only applicable for user collection.
+ * Only applicable for user collection. Grants permission to app, admin and current user.
  * @param user
  */
 export const currentUserAppAdmin: Access = ({ req: { user } }) => {
