@@ -5,18 +5,17 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Building2, ChevronDown, ChevronUp, User } from "lucide-react";
+import { Building2, User } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { clsx } from "clsx";
 import ConnectModal from "~/routes/startup-offerings/ConnectModal";
 import type { PublicUser1, Skill0 } from "~/api/api-types";
 import { useId, useState } from "react";
-import { cn } from "~/lib/utils";
-import { Button } from "~/components/ui/button";
 import { useOptionalUser } from "~/utils";
 import LoginPromptModal from "~/routes/startup-offerings/LoginPromptModal";
 import { match, P } from "ts-pattern";
 import ButtonLink from "~/components/ButtonLink";
+import ClampedText from "~/components/ClampedText";
 
 interface StartupCardProps {
   user: PublicUser1;
@@ -74,25 +73,12 @@ export default function StartupCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div>
-          <p
-            className={cn(
-              "text-sm text-muted-foreground leading-relaxed transition-all",
-              !expanded && "line-clamp-2",
-            )}
-            id={id}
-          >
-            {cardUser.company?.description}
-          </p>
-          <Button
-            className="relative px-0! mt-2 text-muted-foreground "
-            variant="ghost"
-            onClick={() => setExpanded((expanded) => !expanded)}
-          >
-            {expanded ? <ChevronUp /> : <ChevronDown />}
-            Show {expanded ? "less" : "more"}
-          </Button>
-        </div>
+        {cardUser.company?.description && (
+          <ClampedText
+            className="text-sm text-muted-foreground"
+            text={cardUser.company?.description}
+          />
+        )}
         <div>
           <h4 className="text-sm font-medium text-foreground mb-2">Offers:</h4>
           <div className="h-[1.375rem] flex items-center overflow-x-scroll no-scrollbar gap-1.5">
