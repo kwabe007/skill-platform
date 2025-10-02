@@ -14,12 +14,14 @@ import { parseFormData, useForm, validationError } from "@rvf/react-router";
 import { getCurrentUser, logIn } from "~/api/api.server";
 import { loginSchema } from "~/api/api-schemas";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
+import { safeRedirect } from "~/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getCurrentUser(request);
   if (user) {
-    //TODO: Add redirectUrl query param
-    return redirect("/");
+    const url = new URL(request.url);
+    const redirectTo = url.searchParams.get("redirectTo");
+    return redirect(safeRedirect(redirectTo, "/"));
   }
   return {};
 }
@@ -48,8 +50,10 @@ export async function action({ request }: Route.ActionArgs) {
   const nowSeconds = Math.floor(Date.now() / 1000);
   const maxAge = Math.max(0, exp - nowSeconds);
 
-  //TODO: Add redirectUrl query param
-  return redirect("/", {
+  const url = new URL(request.url);
+  const redirectTo = url.searchParams.get("redirectTo");
+
+  return redirect(safeRedirect(redirectTo, "/"), {
     headers: {
       "Set-Cookie": `payload-token=${token}; HttpOnly; Path=/; Max-Age=${maxAge}; Secure; SameSite=Lax`,
     },

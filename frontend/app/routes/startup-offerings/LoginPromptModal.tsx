@@ -11,12 +11,15 @@ import {
 import { Button } from "~/components/ui/button";
 import { LogIn, MessageSquare, Send } from "lucide-react";
 import ButtonLink from "~/components/ButtonLink";
+import { useLocation } from "react-router";
 
 interface LoginPromptModalProps {
   className?: string;
 }
 
 export default function LoginPromptModal({ className }: LoginPromptModalProps) {
+  const location = useLocation();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -55,7 +58,7 @@ export default function LoginPromptModal({ className }: LoginPromptModalProps) {
           <ButtonLink
             variant="default"
             className="bg-gradient-primary"
-            to="/login"
+            to={`/login?redirectTo=${encodeURIComponent(location.pathname)}`}
           >
             <LogIn className="size-4 mr-2" />
             Log in
