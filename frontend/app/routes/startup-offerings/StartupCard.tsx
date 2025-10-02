@@ -77,6 +77,7 @@ export default function StartupCard({
           <ClampedText
             className="text-sm text-muted-foreground"
             text={cardUser.company?.description}
+            fillOutButtonSpaceWhenHidden
           />
         )}
         <div>

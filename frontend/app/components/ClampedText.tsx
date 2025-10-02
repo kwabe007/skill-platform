@@ -5,10 +5,15 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface ClampedTextProps {
   text: string;
+  fillOutButtonSpaceWhenHidden?: boolean;
   className?: string;
 }
 
-export default function ClampedText({ text, className }: ClampedTextProps) {
+export default function ClampedText({
+  text,
+  fillOutButtonSpaceWhenHidden = false,
+  className,
+}: ClampedTextProps) {
   const [expanded, setExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
   const id = useId();
@@ -34,7 +39,7 @@ export default function ClampedText({ text, className }: ClampedTextProps) {
       </p>
       {showExpandButton && (
         <Button
-          className="relative px-0! mt-2 text-muted-foreground "
+          className="relative px-0! py-0 h-7 text-muted-foreground hover:bg-transparent"
           variant="ghost"
           onClick={() => setExpanded((expanded) => !expanded)}
           aria-controls={id}
@@ -43,6 +48,9 @@ export default function ClampedText({ text, className }: ClampedTextProps) {
           {expanded ? <ChevronUp /> : <ChevronDown />}
           Show {expanded ? "less" : "more"}
         </Button>
+      )}
+      {!showExpandButton && fillOutButtonSpaceWhenHidden && (
+        <div className="h-7" />
       )}
     </div>
   );
