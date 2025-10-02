@@ -2,6 +2,7 @@ import { CollectionConfig, ValidationError } from "payload";
 import invariant from "tiny-invariant";
 import { adminOnly, adminOnlyField, currentUserAppAdmin } from "@/collections/access-control";
 
+// TODO: Create an issue on payload for users being able to set _verified to true via API
 export const Users: CollectionConfig = {
   slug: "users",
   access: {
@@ -114,6 +115,18 @@ export const Users: CollectionConfig = {
             errors: [{ message: "Password must be at least 6 characters long.", path: "password" }],
           });
         }
+      },
+    ],
+    beforeChange: [
+      ({ data, operation, req }) => {
+        // Prevent tampering with verification fields
+        if ("_verified" in data) {
+          delete data._verified;
+        }
+        if ("_verificationToken" in data) {
+          delete data._verificationToken;
+        }
+        return data;
       },
     ],
   },
