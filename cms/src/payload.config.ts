@@ -11,6 +11,7 @@ import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Skills } from "@/collections/skills/Skills";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { ConnectionRequests } from "@/collections/ConnectionRequests";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -22,7 +23,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Skills],
+  collections: [Users, Media, Skills, ConnectionRequests],
   editor: lexicalEditor(),
   defaultDepth: 1,
   email:

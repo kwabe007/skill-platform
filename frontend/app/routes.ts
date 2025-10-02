@@ -22,4 +22,5 @@ export default [
   ]),
   route("logout", "routes/logout.tsx"),
   route("verify/:token", "routes/verify.tsx"),
+  route("create-connection-request", "routes/create-connection-request.tsx"),
 ] satisfies RouteConfig;

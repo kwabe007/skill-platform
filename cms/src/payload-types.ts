@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     skills: Skill;
+    'connection-requests': ConnectionRequest;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -84,6 +85,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     skills: SkillsSelect<false> | SkillsSelect<true>;
+    'connection-requests': ConnectionRequestsSelect<false> | ConnectionRequestsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -199,6 +201,18 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "connection-requests".
+ */
+export interface ConnectionRequest {
+  id: number;
+  sender: number | User;
+  receiver: number | User;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -215,6 +229,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'skills';
         value: number | Skill;
+      } | null)
+    | ({
+        relationTo: 'connection-requests';
+        value: number | ConnectionRequest;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -322,6 +340,17 @@ export interface SkillsSelect<T extends boolean = true> {
   slug?: T;
   offeredUsers?: T;
   neededUsers?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "connection-requests_select".
+ */
+export interface ConnectionRequestsSelect<T extends boolean = true> {
+  sender?: T;
+  receiver?: T;
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }

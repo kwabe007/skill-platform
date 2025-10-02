@@ -9,12 +9,16 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import { Building2, MessageSquare, Send } from "lucide-react";
 import defaultMessageTemplate from "./messageMockText.json";
-import { Textarea } from "~/components/ui/textarea";
 import type { PublicUser1 } from "~/api/api-types";
 import { useOptionalUser } from "~/utils";
+import ButtonLabel from "~/components/ButtonLabel";
+import { useId } from "react";
+import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
+import { useForm } from "@rvf/react-router";
+import { useFetcher } from "react-router";
+import { requestConnectionSchema } from "~/api/api-schemas";
 
 function replaceTemplateStringVariables(
   str: string,
@@ -29,19 +33,32 @@ function replaceTemplateStringVariables(
 
 interface ConnectModalProps {
   user: PublicUser1;
-  className?: string;
 }
 
 export default function ConnectModal({
   user: receiverUser,
-  className,
 }: ConnectModalProps) {
   const defaultMessage = replaceTemplateStringVariables(
     defaultMessageTemplate,
     { companyName: receiverUser.company?.name! },
   );
-
+  const fetcher = useFetcher();
+  const submitFormId = useId();
   const user = useOptionalUser();
+  const form = useForm({
+    schema: requestConnectionSchema,
+    action: "/create-connection-request",
+    method: "POST",
+    defaultValues: {
+      message: defaultMessage,
+      receiver: receiverUser.id,
+    },
+    fetcher,
+  });
+
+  const disableSubmit =
+    form.formState.submitStatus === "submitting" ||
+    form.formState.submitStatus === "success";
 
   return (
     <Dialog>
@@ -66,27 +83,32 @@ export default function ConnectModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form>
+        <form {...form.getFormProps()}>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="message">Your message</Label>
-              <Textarea
-                id="message"
-                className="min-h-[200px]"
-                name="message"
-                defaultValue={defaultMessage}
+              <ValidatedInputWithLabel
+                as="textarea"
+                inputClassName="min-h-[200px]"
+                scope={form.scope("message")}
+                label="Your message"
               />
+              <input {...form.getHiddenInputProps("receiver")} />
             </div>
           </div>
+          <input type="submit" id={submitFormId} className="hidden" />
         </form>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button className="bg-gradient-primary" type="submit">
+          <ButtonLabel
+            disabled={disableSubmit}
+            className="bg-gradient-primary"
+            htmlFor={submitFormId}
+          >
             <Send className="size-4 mr-2" />
             Send connection request
-          </Button>
+          </ButtonLabel>
         </DialogFooter>
       </DialogContent>
     </Dialog>

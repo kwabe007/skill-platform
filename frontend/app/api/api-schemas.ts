@@ -30,3 +30,9 @@ export const editUserSchema = z.object({
   neededSkills: nonEmptyStringSchema.array(),
 });
 export type EditUserData = z.infer<typeof editUserSchema>;
+
+export const requestConnectionSchema = z.object({
+  message: z.string().min(1),
+  receiver: z.coerce.number(),
+});
+export type RequestConnectionData = z.infer<typeof requestConnectionSchema>;

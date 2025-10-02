@@ -118,8 +118,10 @@ export const Users: CollectionConfig = {
       },
     ],
     beforeChange: [
-      ({ data, operation, req }) => {
-        // Prevent tampering with verification fields
+      // Prevent tampering with verification fields
+      ({ data, req }) => {
+        if (req.user?.role === "admin") return data;
+
         if ("_verified" in data) {
           delete data._verified;
         }

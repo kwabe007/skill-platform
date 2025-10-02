@@ -2,7 +2,12 @@ import { data } from "react-router";
 import type { Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
-import type { EditUserData, LoginData, SignupData } from "~/api/api-schemas";
+import type {
+  EditUserData,
+  LoginData,
+  RequestConnectionData,
+  SignupData,
+} from "~/api/api-schemas";
 import type {
   PublicSkill1,
   User0,
@@ -284,4 +289,26 @@ export async function getSkill(
     });
   }
   return jsonData.docs[0] ? toPublicSkill2(jsonData.docs[0]) : null;
+}
+
+export async function createConnectionRequest(
+  req: Request,
+  requestConnectionData: RequestConnectionData,
+) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, "api/connection-requests");
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify(requestConnectionData),
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
 }
