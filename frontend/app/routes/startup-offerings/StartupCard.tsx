@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Building2, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2, ChevronDown, ChevronUp, User } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { clsx } from "clsx";
 import ConnectModal from "~/routes/startup-offerings/ConnectModal";
@@ -15,6 +15,8 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { useOptionalUser } from "~/utils";
 import LoginPromptModal from "~/routes/startup-offerings/LoginPromptModal";
+import { match, P } from "ts-pattern";
+import ButtonLink from "~/components/ButtonLink";
 
 interface StartupCardProps {
   user: PublicUser1;
@@ -45,9 +47,21 @@ export default function StartupCard({
   );
   const neededSkillsSorted = placeHighlightedSkillsFirst(cardUser.neededSkills);
 
+  const isSameUserAsCard = (user && user.id === cardUser.id) ?? false;
+
   return (
     /* TODO: Add visual feedback box shadow on card hover */
-    <Card as="article" className={clsx("gap-4", className)}>
+    <Card
+      as="article"
+      className={clsx(
+        "gap-4 relative",
+        isSameUserAsCard && "border-primary/40",
+        className,
+      )}
+    >
+      {isSameUserAsCard && (
+        <Badge className="absolute -top-2 -right-2">Your startup</Badge>
+      )}
       <CardHeader as="header" className="gap-0">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-gradient-primary">
@@ -114,7 +128,24 @@ export default function StartupCard({
       </CardContent>
 
       <CardFooter as="footer" className="mt-2">
-        {user ? <ConnectModal user={cardUser} /> : <LoginPromptModal />}
+        {match(user)
+          .with(P.nullish, () => <LoginPromptModal />)
+          .when(
+            (user) => user.id === cardUser.id,
+            () => (
+              <ButtonLink
+                variant="default"
+                className="w-full"
+                to="/edit-profile"
+              >
+                <User />
+                Edit Profile
+              </ButtonLink>
+            ),
+          )
+          .otherwise(() => (
+            <ConnectModal user={cardUser} />
+          ))}
       </CardFooter>
     </Card>
   );
