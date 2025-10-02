@@ -1,6 +1,5 @@
-import { CollectionConfig, ValidationError, ValidationFieldError } from "payload";
-import { z } from "zod";
-import { normalizeAndAddSlugs, slugify } from "@/collections/skills/skill-utils";
+import { CollectionConfig } from "payload";
+import { slugify } from "@/collections/skills/skill-utils";
 import { addMany } from "@/collections/skills/skill-endpoints";
 
 export const SKILL_COLLECTION_SLUG = "skills" as const;
