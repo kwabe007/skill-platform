@@ -19,7 +19,7 @@ export default function BackButton({
     }
   };
   return (
-    <Button {...rest} onClick={handleBack}>
+    <Button {...rest} variant={variant} onClick={handleBack}>
       <ArrowLeft /> Back
     </Button>
   );

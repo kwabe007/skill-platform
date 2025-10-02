@@ -12,13 +12,14 @@ import { Button } from "~/components/ui/button";
 import { Building2, MessageSquare, Send } from "lucide-react";
 import defaultMessageTemplate from "./messageMockText.json";
 import type { PublicUser1 } from "~/api/api-types";
-import { useOptionalUser } from "~/utils";
+import { formatRelativeTime, useOptionalUser } from "~/utils";
 import ButtonLabel from "~/components/ButtonLabel";
-import { useId } from "react";
+import { useEffect, useId } from "react";
 import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 import { useForm } from "@rvf/react-router";
 import { useFetcher } from "react-router";
 import { requestConnectionSchema } from "~/api/api-schemas";
+import type { loader } from "~/routes/get-connection-request";
 
 function replaceTemplateStringVariables(
   str: string,
@@ -42,9 +43,19 @@ export default function ConnectModal({
     defaultMessageTemplate,
     { companyName: receiverUser.company?.name! },
   );
-  const fetcher = useFetcher();
-  const submitFormId = useId();
+  const formFetcher = useFetcher();
+  const connectionRequestFetcher = useFetcher<typeof loader>();
   const user = useOptionalUser();
+
+  useEffect(() => {
+    if (user) {
+      connectionRequestFetcher.load(
+        `/get-connection-request?sender=${user.id}&receiver=${receiverUser.id}`,
+      );
+    }
+  }, []);
+
+  const submitFormId = useId();
   const form = useForm({
     schema: requestConnectionSchema,
     action: "/create-connection-request",
@@ -53,8 +64,9 @@ export default function ConnectModal({
       message: defaultMessage,
       receiver: receiverUser.id,
     },
-    fetcher,
+    fetcher: formFetcher,
   });
+  const existingConnectionRequest = connectionRequestFetcher.data;
 
   const disableSubmit =
     form.formState.submitStatus === "submitting" ||
@@ -81,6 +93,12 @@ export default function ConnectModal({
             {receiverUser.company?.name}. You can customize the message below
             before sending.
           </DialogDescription>
+          {existingConnectionRequest && (
+            <p className="text-sm">
+              You sent a request to {receiverUser.company?.name}{" "}
+              {formatRelativeTime(existingConnectionRequest.createdAt)}.
+            </p>
+          )}
         </DialogHeader>
 
         <form {...form.getFormProps()}>

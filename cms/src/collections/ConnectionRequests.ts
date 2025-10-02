@@ -7,9 +7,10 @@ export const ConnectionRequests: CollectionConfig = {
   access: getDefaultAccess({
     // Only users who are admins, sender or receiver may read
     read: ({ req: { user } }) => {
-      if (user?.role === "admin") return true;
+      if (!user) return false;
+      if (user.role === "admin") return true;
       const where: Where = {
-        or: [{ sender: { equals: user?.id } }, { receiver: { equals: user?.id } }],
+        or: [{ sender: { equals: user.id } }, { receiver: { equals: user.id } }],
       };
       return where;
     },

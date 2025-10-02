@@ -36,3 +36,11 @@ export const requestConnectionSchema = z.object({
   receiver: z.coerce.number(),
 });
 export type RequestConnectionData = z.infer<typeof requestConnectionSchema>;
+
+export const getConnectionRequestSchema = z.object({
+  sender: z.coerce.number(),
+  receiver: z.coerce.number(),
+});
+export type GetConnectionRequestData = z.infer<
+  typeof getConnectionRequestSchema
+>;

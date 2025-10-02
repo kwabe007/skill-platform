@@ -84,3 +84,54 @@ export function pluralize(
 ) {
   return `${count} ${count === 1 ? singular : plural}`;
 }
+
+/**
+ * Formats a Date object into a relative time string (e.g., "3 days ago").
+ * If the difference is less than 60 seconds, it returns "a moment ago".
+ *
+ * @param {Date | number} targetDate The date to format (Date object or timestamp).
+ * @returns {string} The relative time string.
+ */
+export function formatRelativeTime(targetDate: Date | number): string {
+  const date = targetDate instanceof Date ? targetDate : new Date(targetDate);
+  const now = new Date();
+  const locale = "en"; // Hardcoded locale
+
+  // 1. Calculate the time difference in seconds
+  const diffInSeconds = (date.getTime() - now.getTime()) / 1000;
+
+  // 2. Implement the "a moment ago" logic for differences < 60 seconds
+  const absDiff = Math.abs(diffInSeconds);
+
+  if (absDiff < 60) {
+    // Check if the target is in the future or the past
+    return diffInSeconds > 0 ? "in a moment" : "a moment ago";
+  }
+
+  // 3. Define and iterate through standard relative time units
+  const UNITS = [
+    { name: "year", seconds: 60 * 60 * 24 * 365 },
+    { name: "month", seconds: 60 * 60 * 24 * 30 },
+    { name: "week", seconds: 60 * 60 * 24 * 7 },
+    { name: "day", seconds: 60 * 60 * 24 },
+    { name: "hour", seconds: 60 * 60 },
+    { name: "minute", seconds: 60 },
+  ] as const;
+
+  type Unit = (typeof UNITS)[number]["name"];
+
+  for (const unit of UNITS) {
+    // Calculate the difference in terms of the current unit
+    const unitValue = Math.round(diffInSeconds / unit.seconds);
+
+    // Check if the absolute value of the difference is >= 1 unit
+    if (Math.abs(unitValue) >= 1) {
+      // Use the hardcoded 'en' locale
+      const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "always" });
+      return rtf.format(unitValue, unit.name as Unit);
+    }
+  }
+
+  // Fallback for unexpected cases
+  return diffInSeconds > 0 ? "in a moment" : "a moment ago";
+}

@@ -1,9 +1,10 @@
 import { data } from "react-router";
-import type { Skill, User } from "@payload-types";
+import type { ConnectionRequest, Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type {
   EditUserData,
+  GetConnectionRequestData,
   LoginData,
   RequestConnectionData,
   SignupData,
@@ -311,4 +312,32 @@ export async function createConnectionRequest(
     console.dir(jsonData, { depth: null });
     throw data(jsonData, { status: response.status });
   }
+}
+
+export async function getLatestConnectionRequest(
+  req: Request,
+  getConnectionRequestData: GetConnectionRequestData,
+) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(
+    BASE_URL,
+    "api/connection-requests" +
+      `?where[sender][equals]=${getConnectionRequestData.sender}` +
+      `&where[receiver][equals]=${getConnectionRequestData.receiver}` +
+      `&sort=-createdAt` +
+      `&limit=1`,
+  );
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
+  return jsonData.docs[0] ?? (null as ConnectionRequest | null);
 }
