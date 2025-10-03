@@ -351,6 +351,7 @@ export interface ConnectionRequestsSelect<T extends boolean = true> {
   sender?: T;
   receiver?: T;
   message?: T;
+  sendEmail?: T;
   updatedAt?: T;
   createdAt?: T;
 }

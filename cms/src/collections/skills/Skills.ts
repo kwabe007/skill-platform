@@ -2,10 +2,10 @@ import { CollectionConfig } from "payload";
 import { slugify } from "@/collections/skills/skill-utils";
 import { addMany } from "@/collections/skills/skill-endpoints";
 
-export const SKILL_COLLECTION_SLUG = "skills" as const;
+export const SKILLS_SLUG = "skills" as const;
 
 export const Skills: CollectionConfig = {
-  slug: SKILL_COLLECTION_SLUG,
+  slug: SKILLS_SLUG,
   access: {
     read: () => true,
   },

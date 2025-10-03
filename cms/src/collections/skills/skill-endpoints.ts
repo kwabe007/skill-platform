@@ -1,7 +1,7 @@
 import { Endpoint, ValidationError, ValidationFieldError } from "payload";
 import { z } from "zod";
 import { normalizeAndAddSlugs } from "@/collections/skills/skill-utils";
-import { SKILL_COLLECTION_SLUG } from "@/collections/skills/Skills";
+import { SKILLS_SLUG } from "@/collections/skills/Skills";
 
 export const addMany: Omit<Endpoint, "root"> = {
   path: "/add-many",
@@ -33,7 +33,7 @@ export const addMany: Omit<Endpoint, "root"> = {
       );
       throw new ValidationError(
         {
-          collection: SKILL_COLLECTION_SLUG,
+          collection: SKILLS_SLUG,
           errors,
         },
         req.t,
