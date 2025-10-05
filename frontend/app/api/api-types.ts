@@ -1,4 +1,10 @@
-import type { Skill, User } from "@payload-types";
+import type { ConnectionRequest, Skill, User } from "@payload-types";
+
+type Paginated<T> = {
+  docs: T[];
+  hasNextPage: boolean;
+  totalDocs?: number;
+};
 
 /**
  * User1 represents a User document from the Payload CMS populated with depth = 1
@@ -43,7 +49,7 @@ export type Skill1 = Omit<Skill, "offeredUsers" | "neededUsers"> & {
 };
 
 /**
- * Skill1 represents a Skill document from the Payload CMS populated with depth = 1
+ * Skill2 represents a Skill document from the Payload CMS populated with depth = 2
  */
 export type Skill2 = Omit<Skill, "offeredUsers" | "neededUsers"> & {
   offeredUsers: Paginated<User1>;
@@ -60,8 +66,22 @@ export type PublicSkill2 = Omit<Skill1, "offeredUsers" | "neededUsers"> & {
   neededUsers: Paginated<PublicUser1>;
 };
 
-type Paginated<T> = {
-  docs: T[];
-  hasNextPage: boolean;
-  totalDocs?: number;
+/**
+ * ConnectionRequest1 represents a ConnectionRequest document from the Payload CMS populated with depth = 1
+ */
+export type ConnectionRequest1 = Omit<
+  ConnectionRequest,
+  "sender" | "receiver"
+> & { sender: User0; receiver: User0 };
+
+/**
+ * PublicConnectionRequest1 represents a ConnectionRequest document from the Payload CMS populated with depth = 1 where
+ * its fields have been filtered to only keep the ones that are considered public.
+ */
+export type PublicConnectionRequest1 = Omit<
+  ConnectionRequest,
+  "sender" | "receiver"
+> & {
+  sender: PublicUser0;
+  receiver: PublicUser0;
 };

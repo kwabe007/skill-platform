@@ -1,7 +1,7 @@
 import { cn } from "~/lib/utils";
 import Container from "~/components/Container";
 import ButtonLink from "~/components/ButtonLink";
-import { LogIn, LogOut, User } from "lucide-react";
+import { LogIn, LogOut, Send, User } from "lucide-react";
 import { Form, Link } from "react-router";
 import { PLATFORM_NAME, useOptionalUser } from "~/utils";
 import { Button } from "~/components/ui/button";
@@ -32,12 +32,17 @@ export default function Header({
         >
           {PLATFORM_NAME}
         </Link>
-
         {user && (
-          <ButtonLink variant="primary-foreground-outline" to="/edit-profile">
-            <User />
-            Profile
-          </ButtonLink>
+          <>
+            <ButtonLink variant="primary-foreground-outline" to="/edit-profile">
+              <User />
+              Profile
+            </ButtonLink>
+            <ButtonLink variant="primary-foreground-outline" to="/requests">
+              <Send />
+              Requests
+            </ButtonLink>
+          </>
         )}
         {user ? (
           <Form method="POST" action="logout">

@@ -15,6 +15,7 @@ export default [
       "routes/startup-offerings/startup-offerings.tsx",
     ),
     route("edit-profile", "routes/edit-profile.tsx"),
+    route("requests", "routes/requests.tsx"),
   ]),
   layout("routes/footer-only-layout.tsx", [
     route("login", "routes/login.tsx"),

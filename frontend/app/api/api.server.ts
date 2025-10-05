@@ -1,4 +1,4 @@
-import { data } from "react-router";
+import { data, redirect } from "react-router";
 import type { ConnectionRequest, Skill, User } from "@payload-types";
 import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
@@ -19,6 +19,8 @@ import type {
   Skill2,
   PublicUser1,
   Skill0,
+  ConnectionRequest1,
+  PublicConnectionRequest1,
 } from "~/api/api-types";
 
 invariant(
@@ -136,6 +138,17 @@ export async function getCurrentUser(req: Request) {
   return jsonData.user as User1 | null;
 }
 
+export async function getUserOrRedirect(
+  request: Request,
+  redirectTo?: string,
+): Promise<User1> {
+  const user = await getCurrentUser(request);
+  if (!user) {
+    throw redirect("/");
+  }
+  return user;
+}
+
 export async function verify(token: string) {
   const url = buildUrl(BASE_URL, `api/users/verify/${token}`);
   const response = await fetch(url, {
@@ -251,6 +264,16 @@ function toPublicSkill2(skill: Skill2): PublicSkill2 {
   };
 }
 
+function toPublicConnectionRequests1(
+  connectionRequest: ConnectionRequest1,
+): PublicConnectionRequest1 {
+  return {
+    ...connectionRequest,
+    sender: toPublicUser0(connectionRequest.sender),
+    receiver: toPublicUser0(connectionRequest.receiver),
+  };
+}
+
 export async function getSkills(): Promise<PublicSkill1[]> {
   const url = buildUrl(BASE_URL, "api/skills");
   invariant(process.env.PAYLOAD_API_KEY);
@@ -340,4 +363,32 @@ export async function getLatestConnectionRequest(
     throw data(jsonData, { status: response.status });
   }
   return jsonData.docs[0] ?? (null as ConnectionRequest | null);
+}
+
+export async function getConnectionRequestsForUser(
+  request: Request,
+  userId: number,
+): Promise<PublicConnectionRequest1[]> {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = request.headers.get("Cookie");
+  const url = buildUrl(
+    BASE_URL,
+    "api/connection-requests" +
+      `?where[or][0][sender][equals]=${userId}` +
+      `&where[or][0][receiver][equals]=${userId}` +
+      `&sort=-createdAt` +
+      `&limit=0`,
+  );
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
+  return jsonData.docs.map(toPublicConnectionRequests1);
 }
