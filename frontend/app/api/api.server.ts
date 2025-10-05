@@ -305,7 +305,7 @@ export async function createConnectionRequest(
       "Content-Type": "application/json",
       ...(requestCookie ? { Cookie: requestCookie } : {}),
     },
-    body: JSON.stringify(requestConnectionData),
+    body: JSON.stringify({ ...requestConnectionData, sendEmail: true }),
   });
   const jsonData = await response.json();
   if (!response.ok) {
