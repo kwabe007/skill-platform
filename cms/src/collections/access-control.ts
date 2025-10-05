@@ -43,3 +43,18 @@ export function getDefaultAccess(
     ...overrides,
   };
 }
+
+export function getAdminOnlyAccess(
+  overrides?: CollectionConfig["access"],
+): CollectionConfig["access"] {
+  return {
+    create: adminOnly,
+    read: adminOnly,
+    update: adminOnly,
+    delete: adminOnly,
+    admin: adminOnly,
+    unlock: adminOnly,
+    readVersions: adminOnly,
+    ...overrides,
+  };
+}

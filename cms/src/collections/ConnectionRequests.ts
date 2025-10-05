@@ -1,6 +1,8 @@
 import { CollectionConfig, ValidationError, Where } from "payload";
 import { adminOnly, getDefaultAccess } from "@/collections/access-control";
 import { z } from "zod";
+import { sendEmail } from "@/email";
+import htmlEmail from "./htmlEmailMock.json";
 
 export const CONNECTION_REQUESTS_SLUG = "connection-requests";
 
@@ -41,12 +43,12 @@ export const ConnectionRequests: CollectionConfig = {
     {
       name: "sendEmail",
       type: "checkbox",
-      virtual: true,
       admin: {
         // Show field only in creation view
         condition: ({ id }) => !id,
       },
       required: true,
+      virtual: true,
     },
   ],
   hooks: {
@@ -67,23 +69,21 @@ export const ConnectionRequests: CollectionConfig = {
         }
         return data;
       },
+    ],
+    afterChange: [
       /**
-       * Send email if sendEmail is set to true when creating new connection request.
+       * Send email if sendEmail was set to true in creation.
        */
-      // TODO: data.sendEmail is always set, even if api request did not supply a value. Possible Payload issue?
-      ({ data, operation, req }) => {
-        const result = z.boolean().safeParse(data.sendEmail);
-        if (result.error) {
-          throw new ValidationError({
-            collection: CONNECTION_REQUESTS_SLUG,
-            errors: result.error.issues.map((issue) => ({
-              message: issue.message,
-              path: "sendEmail",
-            })),
-          });
-        }
+      // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue?
+      async ({ data, operation, doc }) => {
         if (operation === "create" && data.sendEmail === true) {
-          console.log("We're gonna send some MAIL");
+          await sendEmail({
+            to: [doc.receiver.email],
+            subject: `${doc.sender.company.name} wants to connect with you`,
+            text: "We should connect.",
+            html: htmlEmail,
+            replyTo: doc.sender.email,
+          });
         }
         return data;
       },
