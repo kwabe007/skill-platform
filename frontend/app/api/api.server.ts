@@ -269,7 +269,10 @@ function toPublicConnectionRequests1(
 ): PublicConnectionRequest1 {
   return {
     ...connectionRequest,
-    sender: toPublicUser0(connectionRequest.sender),
+    sender: {
+      ...toPublicUser0(connectionRequest.sender),
+      email: connectionRequest.sender.email,
+    },
     receiver: toPublicUser0(connectionRequest.receiver),
   };
 }
@@ -375,10 +378,12 @@ export async function getConnectionRequestsForUser(
     BASE_URL,
     "api/connection-requests" +
       `?where[or][0][sender][equals]=${userId}` +
-      `&where[or][0][receiver][equals]=${userId}` +
+      `&where[or][1][receiver][equals]=${userId}` +
       `&sort=-createdAt` +
       `&limit=0`,
   );
+
+  console.log("url", url);
   const response = await fetch(url, {
     method: "GET",
     headers: {

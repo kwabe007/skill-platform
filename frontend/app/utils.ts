@@ -2,6 +2,7 @@ import { useRouteLoaderData } from "react-router";
 import type { User } from "@payload-types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import invariant from "tiny-invariant";
 
 export const PLATFORM_NAME = "Skill Platform";
 
@@ -28,6 +29,15 @@ export function useOptionalUser() {
     return data.user as User;
   }
   return null;
+}
+
+export function useRequiredUser(): User {
+  const user = useOptionalUser();
+  invariant(
+    user,
+    "Tried getting required user but no user found in root loader.",
+  );
+  return user;
 }
 
 export function useSuccessToast(show: boolean, message: string, key = "") {

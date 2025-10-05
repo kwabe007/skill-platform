@@ -76,12 +76,13 @@ export type ConnectionRequest1 = Omit<
 
 /**
  * PublicConnectionRequest1 represents a ConnectionRequest document from the Payload CMS populated with depth = 1 where
- * its fields have been filtered to only keep the ones that are considered public.
+ * its fields have been filtered to only keep the ones that are considered public. Email can be kept on the sender
+ * because the sender's email address will already be disclosed from the automatic mail on connection request creation.
  */
 export type PublicConnectionRequest1 = Omit<
   ConnectionRequest,
   "sender" | "receiver"
 > & {
-  sender: PublicUser0;
+  sender: PublicUser0 & { email: string };
   receiver: PublicUser0;
 };

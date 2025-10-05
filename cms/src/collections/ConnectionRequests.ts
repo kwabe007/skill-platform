@@ -1,6 +1,7 @@
-import { CollectionConfig, ValidationError, Where } from "payload";
+import { CollectionConfig, Where } from "payload";
 import { adminOnly, getDefaultAccess } from "@/collections/access-control";
-import { z } from "zod";
+import { getPayload } from "payload";
+import config from "@payload-config";
 import { sendEmail } from "@/email";
 import htmlEmail from "./htmlEmailMock.json";
 
@@ -77,8 +78,21 @@ export const ConnectionRequests: CollectionConfig = {
       // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue?
       async ({ data, operation, doc }) => {
         if (operation === "create" && data.sendEmail === true) {
+          let receiverEmail: string;
+          // For some reason sometimes doc.receiver is not populated, so we need to manually fetch
+          // the user data. This might be a Payload issue.
+          if (typeof doc.receiver === "number") {
+            const payload = await getPayload({ config });
+            const receiver = await payload.findByID({
+              collection: "users",
+              id: doc.receiver,
+            });
+            receiverEmail = receiver.email;
+          } else {
+            receiverEmail = doc.receiver.email;
+          }
           await sendEmail({
-            to: [doc.receiver.email],
+            to: [receiverEmail],
             subject: `${doc.sender.company.name} wants to connect with you`,
             text: "We should connect.",
             html: htmlEmail,

@@ -19,6 +19,8 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        "text-link":
+          "text-primary underline-offset-4 hover:underline !px-0 !py-0 !h-auto",
         "primary-foreground-outline":
           "border border-white/50 text-white/80 bg-white/5 shadow-xs hover:border-white/80 hover:text-white hover:bg-white/10",
         "primary-foreground-ghost":
