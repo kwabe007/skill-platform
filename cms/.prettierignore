@@ -12,3 +12,6 @@ pnpm-lock.yaml
 .gitignore
 .env.example
 *.txt
+
+
+src/app/(payload)/admin/importMap.js
