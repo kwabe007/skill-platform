@@ -383,7 +383,6 @@ export async function getConnectionRequestsForUser(
       `&limit=0`,
   );
 
-  console.log("url", url);
   const response = await fetch(url, {
     method: "GET",
     headers: {

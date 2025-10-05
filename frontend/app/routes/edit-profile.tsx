@@ -19,6 +19,13 @@ const editUserFormSchema = editUserSchema.extend({
   neededSkills: z.string(),
 });
 
+export const handle = {
+  pageTitle: "Edit your profile",
+  pageSubtitle:
+    "Update your profile information to help other startups find and\n" +
+    "              connect with you.",
+};
+
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getCurrentUser(request);
   if (!user) {
@@ -96,18 +103,8 @@ export default function EditProfileRoute() {
 
   return (
     <div>
-      <Container className="max-w-xl py-16">
-        <BackButton />
-        <form {...form.getFormProps()} className="space-y-8 mt-4">
-          <div className="text-center">
-            <Text as="h1" variant="h2">
-              Edit your profile
-            </Text>
-            <p className="text-muted-foreground mt-6">
-              Update your profile information to help other startups find and
-              connect with you.
-            </p>
-          </div>
+      <Container className="max-w-xl">
+        <form {...form.getFormProps()} className="space-y-8">
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2 text-primary">

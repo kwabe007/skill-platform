@@ -5,12 +5,15 @@ import {
 } from "~/api/api.server";
 import { useLoaderData } from "react-router";
 import Container from "~/components/Container";
-import Text from "~/components/Text";
-import BackButton from "~/components/BackButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Inbox, Send } from "lucide-react";
 import { useRequiredUser } from "~/utils";
 import RequestCard from "~/routes/requests/RequestCard";
+
+export const handle = {
+  pageTitle: "Requests",
+  pageSubtitle: "Manage your sent and received requests",
+};
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserOrRedirect(request);
@@ -33,12 +36,7 @@ export default function RequestsRoute() {
   );
 
   return (
-    <Container className="py-8 space-y-8 max-w-3xl">
-      <BackButton />
-      <Text as="h1" variant="h1">
-        Requests
-      </Text>
-
+    <Container className="space-y-8 max-w-3xl">
       <Tabs defaultValue="sent">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="sent" className="flex items-center gap-2">

@@ -8,11 +8,13 @@ import { Button } from "~/components/ui/button";
 
 interface HeaderProps {
   variant?: "default" | "transparent";
+  pageTitle?: string;
   className?: string;
 }
 
 export default function Header({
   variant = "default",
+  pageTitle,
   className,
 }: HeaderProps) {
   const user = useOptionalUser();
