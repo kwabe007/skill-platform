@@ -11,10 +11,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import {
-  getConnectionRequestsForUserGql,
-  getCurrentUser,
-} from "~/api/api.server";
+import { getCurrentUser } from "~/api/api.server";
 import { Toaster } from "~/components/ui/sonner";
 import { readToastSession } from "~/cookie-serializers.server";
 import { useEffect } from "react";
