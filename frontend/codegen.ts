@@ -5,8 +5,8 @@ const config: CodegenConfig = {
   documents: ["app/**/*.ts"],
   ignoreNoDocuments: true,
   generates: {
-    "./app/graphql/generated.ts": {
-      plugins: ["typescript", "typescript-operations"],
+    "./app/graphql/": {
+      preset: "client",
       config: {
         gqlTagName: "gql", // or your custom tag
         useTypeImports: true, // 👈 add this

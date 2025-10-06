@@ -4,11 +4,11 @@ import Text from "~/components/Text";
 import { format } from "date-fns";
 import { Separator } from "~/components/ui/separator";
 import ParagraphText from "~/components/ParagraphText";
-import type { PublicConnectionRequest1 } from "~/api/api-types";
 import { Button } from "~/components/ui/button";
+import type { GetConnectionRequestsQueryData } from "~/api/api-schemas";
 
 interface RequestCardProps {
-  request: PublicConnectionRequest1;
+  request: GetConnectionRequestsQueryData;
   type: "sent" | "received";
   className?: string;
 }

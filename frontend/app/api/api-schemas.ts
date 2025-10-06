@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { GetConnectionRequestsQuery } from "~/graphql/graphql";
 
 const nonEmptyStringSchema = z.string().min(1, "This field is required.");
 
@@ -44,3 +45,7 @@ export const getConnectionRequestSchema = z.object({
 export type GetConnectionRequestData = z.infer<
   typeof getConnectionRequestSchema
 >;
+
+export type GetConnectionRequestsQueryData = NonNullable<
+  GetConnectionRequestsQuery["ConnectionRequests"]
+>["docs"][number];

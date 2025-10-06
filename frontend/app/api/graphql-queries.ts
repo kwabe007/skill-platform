@@ -1,14 +1,6 @@
-import { gql } from "@apollo/client";
-import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import type {
-  GetConnectionRequestsQuery,
-  GetConnectionRequestsQueryVariables,
-} from "~/graphql/generated";
+import { graphql } from "~/graphql";
 
-export const GET_CONNECTION_REQUESTS: TypedDocumentNode<
-  GetConnectionRequestsQuery,
-  GetConnectionRequestsQueryVariables
-> = gql`
+export const GET_CONNECTION_REQUESTS = graphql(`
   query GetConnectionRequests($userId: JSON) {
     ConnectionRequests(
       where: {
@@ -16,6 +8,7 @@ export const GET_CONNECTION_REQUESTS: TypedDocumentNode<
       }
     ) {
       docs {
+        id
         sender {
           id
           fullName
@@ -33,9 +26,9 @@ export const GET_CONNECTION_REQUESTS: TypedDocumentNode<
             description
           }
         }
-        id
+        message
         createdAt
       }
     }
   }
-`;
+`);
