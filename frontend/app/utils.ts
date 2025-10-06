@@ -194,3 +194,13 @@ export function isWithinMinimumTime(
   const elapsed = now - timestamp;
   return elapsed < minElapsedMs;
 }
+
+export function useEnv() {
+  const data = useRouteLoaderData("root");
+  if (data && "env" in data && typeof data.env === "object") {
+    return data.env as Record<string, string>;
+  }
+  throw new Error(
+    "Tried getting env from useEnv but no env found in root loader.",
+  );
+}

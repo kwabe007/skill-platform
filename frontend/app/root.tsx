@@ -53,11 +53,12 @@ export async function loader({ request }: Route.LoaderArgs) {
   const user = await getCurrentUser(request);
   const { message, headers: toastHeaders } = await readToastSession(request);
   const toastKey = message ? Math.random().toString(36) : undefined;
-  return data({ user, message, toastKey }, { headers: toastHeaders });
+  const env = { CONTACT_EMAIL: process.env.CONTACT_EMAIL };
+  return data({ user, message, toastKey, env }, { headers: toastHeaders });
 }
 
 export default function App() {
-  const { message, toastKey } = useLoaderData<typeof loader>();
+  const { message, toastKey, env } = useLoaderData<typeof loader>();
 
   useEffect(() => {
     if (message) {
@@ -67,7 +68,16 @@ export default function App() {
     }
   }, [`${message}-${toastKey}`]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.env = ${JSON.stringify(env)}`,
+        }}
+      />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
