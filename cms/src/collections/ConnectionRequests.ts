@@ -1,6 +1,5 @@
-import { CollectionConfig, Where } from "payload";
-import { adminOnly, getDefaultAccess } from "@/collections/access-control";
-import { getPayload } from "payload";
+import { CollectionConfig, Forbidden, getPayload, Where } from "payload";
+import { getDefaultAccess } from "@/collections/access-control";
 import config from "@payload-config";
 import { sendEmail } from "@/email";
 import htmlEmail from "./htmlEmailMock.json";
@@ -14,15 +13,12 @@ export const ConnectionRequests: CollectionConfig = {
     // Only users who are admins, sender or receiver may read
     read: ({ req: { user } }) => {
       if (!user) return false;
-      if (user.role === "admin") return true;
-      if (user.role === "app") return true;
+      if (user.role === "admin" || user.role === "app") return true;
       const where: Where = {
         or: [{ sender: { equals: user.id } }, { receiver: { equals: user.id } }],
       };
       return where;
     },
-    update: adminOnly,
-    delete: adminOnly,
   }),
   fields: [
     {
@@ -59,14 +55,30 @@ export const ConnectionRequests: CollectionConfig = {
        * Set sender to current user when creating new connection request. Admin can choose sender by
        * setting the `sender` prop
        */
-      ({ data, operation, req }) => {
+      async ({ data, operation, req }) => {
         if (operation === "create") {
-          const user = req.user;
-          if (!user) return data;
-          if (user.role === "admin") {
-            data.sender ??= user.id;
-          } else {
-            data.sender = user.id;
+          const payload = await getPayload({ config });
+
+          const result = await payload.find({
+            collection: CONNECTION_REQUESTS_SLUG,
+            where: {
+              receiver: { equals: data.receiver },
+            },
+            sort: "-createdAt",
+            limit: 1,
+          });
+
+          const latestConnectionRequest = result.docs.at(0);
+          if (latestConnectionRequest) {
+            const now = new Date();
+            const createdAtDate = new Date(latestConnectionRequest.createdAt);
+            const diffMs = now.getTime() - createdAtDate.getTime();
+            if (diffMs < 1000 * 60 * 60 * 48) {
+              throw new Forbidden(
+                () =>
+                  "Previous request has already been sent to the receiver within the last 48 hours. Please wait before sending a new one.",
+              );
+            }
           }
         }
         return data;
@@ -79,21 +91,8 @@ export const ConnectionRequests: CollectionConfig = {
       // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue?
       async ({ data, operation, doc }) => {
         if (operation === "create" && data.sendEmail === true) {
-          let receiverEmail: string;
-          // For some reason sometimes doc.receiver is not populated, so we need to manually fetch
-          // the user data. This might be a Payload issue.
-          if (typeof doc.receiver === "number") {
-            const payload = await getPayload({ config });
-            const receiver = await payload.findByID({
-              collection: "users",
-              id: doc.receiver,
-            });
-            receiverEmail = receiver.email;
-          } else {
-            receiverEmail = doc.receiver.email;
-          }
           await sendEmail({
-            to: [receiverEmail],
+            to: [doc.sender.email],
             subject: `${doc.sender.company.name} wants to connect with you`,
             text: "We should connect.",
             html: htmlEmail,

@@ -4,6 +4,10 @@ export const adminOnly: FieldAccess = ({ req: { user } }) => {
   return user?.role === "admin";
 };
 
+export const adminOrApp: FieldAccess = ({ req: { user } }) => {
+  return user?.role === "admin" || user?.role === "app";
+};
+
 /**
  * Only applicable for user collection. Grants permission to app, admin and current user.
  * @param user
@@ -33,10 +37,10 @@ export function getDefaultAccess(
   overrides?: CollectionConfig["access"],
 ): CollectionConfig["access"] {
   return {
-    create: ({ req }) => req.user?.role === "admin" || req.user?.role === "member",
-    read: ({ req }) => req.user?.role === "admin" || req.user?.role === "member",
-    update: ({ req }) => req.user?.role === "admin" || req.user?.role === "member",
-    delete: ({ req }) => req.user?.role === "admin" || req.user?.role === "member",
+    create: adminOrApp,
+    read: adminOrApp,
+    update: adminOrApp,
+    delete: adminOrApp,
     admin: adminOnly,
     unlock: adminOnly,
     readVersions: adminOnly,
