@@ -11,6 +11,12 @@ import {
   getSkill,
 } from "~/api/api.server";
 
+export const handle = {
+  pageTitle: "Connect & Collaborate",
+  pageSubtitle:
+    "Find a matching startup to exchange skills, services, and opportunities",
+};
+
 export async function loader({ request, params }: Route.LoaderArgs) {
   const skill = await getSkill(params.skillSlug);
   if (!skill) {

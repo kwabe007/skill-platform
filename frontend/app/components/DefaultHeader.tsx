@@ -3,8 +3,10 @@ import BackButton from "~/components/BackButton";
 import Container from "~/components/Container";
 import Text from "~/components/Text";
 import ButtonLink from "~/components/ButtonLink";
-import { Send, User } from "lucide-react";
+import { LogIn, LogOut, Send, User } from "lucide-react";
 import { useOptionalUser } from "~/utils";
+import { Form } from "react-router";
+import { Button } from "~/components/ui/button";
 
 interface DefaultHeaderProps {
   pageTitle?: string;
@@ -40,6 +42,19 @@ export default function DefaultHeader({
                 Requests
               </ButtonLink>
             </>
+          )}
+          {user ? (
+            <Form method="POST" action="logout">
+              <Button variant="primary-foreground-outline">
+                <LogOut />
+                Log out
+              </Button>
+            </Form>
+          ) : (
+            <ButtonLink variant="primary-foreground-outline" to="/login">
+              <LogIn />
+              Log in
+            </ButtonLink>
           )}
         </div>
         <div className="mt-4">
