@@ -15,6 +15,7 @@ export const ConnectionRequests: CollectionConfig = {
     read: ({ req: { user } }) => {
       if (!user) return false;
       if (user.role === "admin") return true;
+      if (user.role === "app") return true;
       const where: Where = {
         or: [{ sender: { equals: user.id } }, { receiver: { equals: user.id } }],
       };

@@ -10,18 +10,21 @@ import type {
   SignupData,
 } from "~/api/api-schemas";
 import type {
-  PublicSkill1,
-  User0,
-  PublicUser0,
-  User1,
-  Skill1,
-  PublicSkill2,
-  Skill2,
-  PublicUser1,
-  Skill0,
   ConnectionRequest1,
   PublicConnectionRequest1,
+  PublicSkill1,
+  PublicSkill2,
+  PublicUser0,
+  PublicUser1,
+  Skill0,
+  Skill1,
+  Skill2,
+  User0,
+  User1,
 } from "~/api/api-types";
+import { apollo } from "~/apollo-client.server";
+import { GET_CONNECTION_REQUESTS } from "~/api/graphql-queries";
+import { getAppContext } from "~/api/api-utils.server";
 
 invariant(
   process.env.PAYLOAD_BASE_URL,
@@ -395,4 +398,21 @@ export async function getConnectionRequestsForUser(
     throw data(jsonData, { status: response.status });
   }
   return jsonData.docs.map(toPublicConnectionRequests1);
+}
+
+export async function getConnectionRequestsForUserGql(
+  request: Request,
+  userId: number,
+) {
+  const t = await apollo.query({
+    query: GET_CONNECTION_REQUESTS,
+    variables: {
+      userId,
+    },
+    context: getAppContext(),
+  });
+  if (!t.data?.ConnectionRequests) {
+    throw t.error;
+  }
+  return t.data.ConnectionRequests.docs;
 }

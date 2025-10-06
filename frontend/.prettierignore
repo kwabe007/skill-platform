@@ -13,3 +13,5 @@ pnpm-lock.yaml
 .gitignore
 .env.example
 *.txt
+
+app/graphql
