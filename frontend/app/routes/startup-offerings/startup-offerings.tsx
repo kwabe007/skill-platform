@@ -5,9 +5,13 @@ import { Badge } from "~/components/ui/badge";
 import StartupCard from "~/routes/startup-offerings/StartupCard";
 import Container from "~/components/Container";
 import type { Route } from "./+types/startup-offerings";
-import { getSkill } from "~/api/api.server";
+import {
+  getConnectionRequestsForUser,
+  getCurrentUser,
+  getSkill,
+} from "~/api/api.server";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const skill = await getSkill(params.skillSlug);
   if (!skill) {
     throw data(null, {
@@ -15,11 +19,15 @@ export async function loader({ params }: Route.LoaderArgs) {
       statusText: "The skill you are looking for does not exist yet.",
     });
   }
-  return { skill };
+  const user = await getCurrentUser(request);
+  const connectionRequests = user
+    ? await getConnectionRequestsForUser(user.id)
+    : [];
+  return { skill, connectionRequests };
 }
 
 export default function StartupOfferingsRoute() {
-  const { skill } = useLoaderData<typeof loader>();
+  const { skill, connectionRequests } = useLoaderData<typeof loader>();
 
   const offeredCount = skill.offeredUsers.docs.length;
   const neededCount = skill.neededUsers.docs.length;
@@ -47,13 +55,20 @@ export default function StartupOfferingsRoute() {
             </Badge>
           </div>
           <div className="grid items-start md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
-            {skill.offeredUsers.docs.map((user, index) => (
-              <StartupCard
-                key={index}
-                user={user}
-                highlightedSkillId={skill.id}
-              />
-            ))}
+            {skill.offeredUsers.docs.map((user, index) => {
+              const latestSentRequest = connectionRequests
+                .filter((request) => request.receiver.id === user.id)
+                .sort((a, b) => b.createdAt - a.createdAt)
+                .at(0);
+              return (
+                <StartupCard
+                  key={index}
+                  user={user}
+                  highlightedSkillId={skill.id}
+                  latestSentRequest={latestSentRequest}
+                />
+              );
+            })}
           </div>
         </section>
         <section>
@@ -66,13 +81,20 @@ export default function StartupOfferingsRoute() {
             </Badge>
           </div>
           <div className="grid items-start md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
-            {skill.neededUsers.docs.map((user, index) => (
-              <StartupCard
-                key={index}
-                user={user}
-                highlightedSkillId={skill.id}
-              />
-            ))}
+            {skill.neededUsers.docs.map((user, index) => {
+              const latestSentRequest = connectionRequests
+                .filter((request) => request.receiver.id === user.id)
+                .sort((a, b) => b.createdAt - a.createdAt)
+                .at(0);
+              return (
+                <StartupCard
+                  key={index}
+                  user={user}
+                  highlightedSkillId={skill.id}
+                  latestSentRequest={latestSentRequest}
+                />
+              );
+            })}
           </div>
         </section>
       </Container>

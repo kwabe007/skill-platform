@@ -1,6 +1,6 @@
 import type { Route } from "./+types/requests";
 import {
-  getConnectionRequestsForUserGql,
+  getConnectionRequestsForUser,
   getUserOrRedirect,
 } from "~/api/api.server";
 import { useLoaderData } from "react-router";
@@ -17,10 +17,7 @@ export const handle = {
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserOrRedirect(request);
-  const connectionRequests = await getConnectionRequestsForUserGql(
-    request,
-    user.id,
-  );
+  const connectionRequests = await getConnectionRequestsForUser(user.id);
   return { connectionRequests };
 }
 export async function action({ request }: Route.ActionArgs) {}

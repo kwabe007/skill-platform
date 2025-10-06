@@ -176,3 +176,21 @@ export function safeRedirect(
 
   return trimmedTo;
 }
+
+/**
+ * Determines whether a given date or timestamp occurred
+ * less than a specified duration ago from the current time.
+ *
+ * @param date - The date or timestamp (in milliseconds) to check.
+ * @param minElapsedMs - The minimum amount of time that must have passed (in milliseconds).
+ * @returns `true` if less than `minElapsedMs` milliseconds have passed since `date`, otherwise `false`.
+ */
+export function isWithinMinimumTime(
+  date: Date | number | string,
+  minElapsedMs: number,
+): boolean {
+  const timestamp = new Date(date).getTime();
+  const now = Date.now();
+  const elapsed = now - timestamp;
+  return elapsed < minElapsedMs;
+}

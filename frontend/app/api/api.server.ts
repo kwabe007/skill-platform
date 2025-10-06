@@ -152,6 +152,14 @@ export async function getUserOrRedirect(
   return user;
 }
 
+export async function getUserOrThrow401(request: Request): Promise<User1> {
+  const user = await getCurrentUser(request);
+  if (!user) {
+    throw data(null, { status: 401, statusText: "Not logged in" });
+  }
+  return user;
+}
+
 export async function verify(token: string) {
   const url = buildUrl(BASE_URL, `api/users/verify/${token}`);
   const response = await fetch(url, {
@@ -323,7 +331,7 @@ export async function getSkill(
 
 export async function createConnectionRequest(
   req: Request,
-  requestConnectionData: RequestConnectionData,
+  requestConnectionData: RequestConnectionData & { sender: number },
 ) {
   //TODO: Only get the payload-token cookie
   const requestCookie = req.headers.get("Cookie");
@@ -371,48 +379,16 @@ export async function getLatestConnectionRequest(
   return jsonData.docs[0] ?? (null as ConnectionRequest | null);
 }
 
-export async function getConnectionRequestsForUser(
-  request: Request,
-  userId: number,
-): Promise<PublicConnectionRequest1[]> {
-  //TODO: Only get the payload-token cookie
-  const requestCookie = request.headers.get("Cookie");
-  const url = buildUrl(
-    BASE_URL,
-    "api/connection-requests" +
-      `?where[or][0][sender][equals]=${userId}` +
-      `&where[or][1][receiver][equals]=${userId}` +
-      `&sort=-createdAt` +
-      `&limit=0`,
-  );
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      ...(requestCookie ? { Cookie: requestCookie } : {}),
-    },
-  });
-  const jsonData = await response.json();
-  if (!response.ok) {
-    console.dir(jsonData, { depth: null });
-    throw data(jsonData, { status: response.status });
-  }
-  return jsonData.docs.map(toPublicConnectionRequests1);
-}
-
-export async function getConnectionRequestsForUserGql(
-  request: Request,
-  userId: number,
-) {
-  const t = await apollo.query({
+export async function getConnectionRequestsForUser(userId: number) {
+  const result = await apollo.query({
     query: GET_CONNECTION_REQUESTS,
     variables: {
       userId,
     },
     context: getAppContext(),
   });
-  if (!t.data?.ConnectionRequests) {
-    throw t.error;
+  if (!result.data?.ConnectionRequests) {
+    throw result.error;
   }
-  return t.data.ConnectionRequests.docs;
+  return result.data.ConnectionRequests.docs;
 }

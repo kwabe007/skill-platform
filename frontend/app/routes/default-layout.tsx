@@ -19,7 +19,6 @@ export default function DefaultLayout() {
   const pageTitleMatches = matches.filter(
     (match) => pageTitleMatchSchema.safeParse(match).success,
   ) as PageTitleMatch[];
-  console.log(pageTitleMatches);
 
   const pageTitle = pageTitleMatches.at(-1)?.handle.pageTitle;
   const pageSubtitle = pageTitleMatches.at(-1)?.handle.pageSubtitle;

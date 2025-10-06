@@ -25,7 +25,22 @@ const httpLink = new HttpLink({
   uri: buildUrl(process.env.PAYLOAD_BASE_URL, "/api/graphql"),
 });
 
+const defaultOptions: any =
+  process.env.NODE_ENV !== "production"
+    ? {
+        watchQuery: {
+          fetchPolicy: "no-cache",
+          errorPolicy: "all",
+        },
+        query: {
+          fetchPolicy: "no-cache",
+          errorPolicy: "all",
+        },
+      }
+    : undefined;
+
 export const apollo = new ApolloClient({
   link: ApolloLink.from([authLink, httpLink]),
   cache: new InMemoryCache(),
+  defaultOptions,
 });

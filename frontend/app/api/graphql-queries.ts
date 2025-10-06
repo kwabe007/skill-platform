@@ -6,6 +6,7 @@ export const GET_CONNECTION_REQUESTS = graphql(`
       where: {
         OR: [{ sender: { equals: $userId } }, { receiver: { equals: $userId } }]
       }
+      limit: 0
     ) {
       docs {
         id

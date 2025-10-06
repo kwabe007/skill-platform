@@ -10,22 +10,29 @@ import { Badge } from "~/components/ui/badge";
 import { clsx } from "clsx";
 import ConnectModal from "~/routes/startup-offerings/ConnectModal";
 import type { PublicUser1, Skill0 } from "~/api/api-types";
-import { useId, useState } from "react";
-import { useOptionalUser } from "~/utils";
+import {
+  formatRelativeTime,
+  isWithinMinimumTime,
+  useOptionalUser,
+} from "~/utils";
 import LoginPromptModal from "~/routes/startup-offerings/LoginPromptModal";
 import { match, P } from "ts-pattern";
 import ButtonLink from "~/components/ButtonLink";
 import ClampedText from "~/components/ClampedText";
+import Text from "~/components/Text";
+import type { GetConnectionRequestsQueryData } from "~/api/api-schemas";
 
 interface StartupCardProps {
   user: PublicUser1;
   highlightedSkillId: number;
+  latestSentRequest: GetConnectionRequestsQueryData | undefined;
   className?: string;
 }
 
 export default function StartupCard({
   user: cardUser,
   highlightedSkillId,
+  latestSentRequest,
   className,
 }: StartupCardProps) {
   const user = useOptionalUser();
@@ -126,6 +133,25 @@ export default function StartupCard({
                 <User />
                 Edit Profile
               </ButtonLink>
+            ),
+          )
+          .when(
+            () => {
+              const v =
+                latestSentRequest &&
+                isWithinMinimumTime(
+                  latestSentRequest.createdAt,
+                  1000 * 60 * 60 * 48,
+                );
+              if (cardUser.id === 28) {
+              }
+              return v;
+            },
+            () => (
+              <Text as="p" variant="muted-sm">
+                You sent a request to {cardUser.company?.name}{" "}
+                {formatRelativeTime(latestSentRequest!.createdAt)}.
+              </Text>
             ),
           )
           .otherwise(() => (
