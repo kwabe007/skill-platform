@@ -1,9 +1,9 @@
-import Header from "~/components/Header";
+import TransparentHeader from "~/components/header/TransparentHeader";
 import { Outlet, useMatches } from "react-router";
 import Footer from "~/components/Footer";
 import Main from "~/components/Main";
 import { z } from "zod";
-import DefaultHeader from "~/components/DefaultHeader";
+import DefaultHeader from "~/components/header/DefaultHeader";
 
 const pageTitleMatchSchema = z.object({
   handle: z.object({

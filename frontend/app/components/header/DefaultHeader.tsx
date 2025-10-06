@@ -7,6 +7,8 @@ import { LogIn, LogOut, Send, User } from "lucide-react";
 import { useOptionalUser } from "~/utils";
 import { Form } from "react-router";
 import { Button } from "~/components/ui/button";
+import LargeScreenButtons from "~/components/header/LargeScreenButtons";
+import MobileNavigationSheet from "~/components/MobileNavigationSheet";
 
 interface DefaultHeaderProps {
   pageTitle?: string;
@@ -28,34 +30,18 @@ export default function DefaultHeader({
       <Container>
         <div className="flex justify-end gap-4">
           <BackButton variant="primary-foreground-ghost" className="mr-auto" />
-          {user && (
-            <>
-              <ButtonLink
-                variant="primary-foreground-outline"
-                to="/edit-profile"
-              >
-                <User />
-                Profile
-              </ButtonLink>
-              <ButtonLink variant="primary-foreground-outline" to="/requests">
-                <Send />
-                Requests
-              </ButtonLink>
-            </>
-          )}
+          <LargeScreenButtons className="hidden md:flex" />
           {user ? (
-            <Form method="POST" action="logout">
-              <Button variant="primary-foreground-outline">
-                <LogOut />
-                Log out
-              </Button>
-            </Form>
+            <ButtonLink variant="primary-foreground-outline" to="/requests">
+              <Send />
+              Requests
+            </ButtonLink>
           ) : (
-            <ButtonLink variant="primary-foreground-outline" to="/login">
-              <LogIn />
-              Log in
+            <ButtonLink variant="primary-foreground-outline" to="/signup">
+              Join
             </ButtonLink>
           )}
+          <MobileNavigationSheet triggerClassName="md:hidden" />
         </div>
         <div className="mt-4">
           {pageTitle && (
@@ -63,7 +49,7 @@ export default function DefaultHeader({
               {pageTitle}
             </Text>
           )}
-          {pageSubtitle && <p className="text-white/80">{pageSubtitle}</p>}
+          {pageSubtitle && <p className="text-white/80 mt-1">{pageSubtitle}</p>}
         </div>
       </Container>
     </header>

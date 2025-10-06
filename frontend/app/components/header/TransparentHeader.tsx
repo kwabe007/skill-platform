@@ -5,18 +5,20 @@ import { LogIn, LogOut, Send, User } from "lucide-react";
 import { Form, Link } from "react-router";
 import { PLATFORM_NAME, useOptionalUser } from "~/utils";
 import { Button } from "~/components/ui/button";
+import LargeScreenButtons from "~/components/header/LargeScreenButtons";
+import MobileNavigationSheet from "~/components/MobileNavigationSheet";
 
-interface HeaderProps {
+interface TransparentHeaderProps {
   variant?: "default" | "transparent";
   pageTitle?: string;
   className?: string;
 }
 
-export default function Header({
+export default function TransparentHeader({
   variant = "default",
   pageTitle,
   className,
-}: HeaderProps) {
+}: TransparentHeaderProps) {
   const user = useOptionalUser();
 
   return (
@@ -34,31 +36,18 @@ export default function Header({
         >
           {PLATFORM_NAME}
         </Link>
-        {user && (
-          <>
-            <ButtonLink variant="primary-foreground-outline" to="/edit-profile">
-              <User />
-              Profile
-            </ButtonLink>
-            <ButtonLink variant="primary-foreground-outline" to="/requests">
-              <Send />
-              Requests
-            </ButtonLink>
-          </>
-        )}
+        <LargeScreenButtons className="hidden md:flex" />
         {user ? (
-          <Form method="POST" action="logout">
-            <Button variant="primary-foreground-outline">
-              <LogOut />
-              Log out
-            </Button>
-          </Form>
+          <ButtonLink variant="primary-foreground-outline" to="/requests">
+            <Send />
+            Requests
+          </ButtonLink>
         ) : (
-          <ButtonLink variant="primary-foreground-outline" to="/login">
-            <LogIn />
-            Log in
+          <ButtonLink variant="primary-foreground-outline" to="/signup">
+            Join
           </ButtonLink>
         )}
+        <MobileNavigationSheet triggerClassName="md:hidden" />
       </Container>
     </header>
   );

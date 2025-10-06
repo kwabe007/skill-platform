@@ -1,4 +1,4 @@
-import Header from "~/components/Header";
+import TransparentHeader from "~/components/header/TransparentHeader";
 import { Outlet } from "react-router";
 import Footer from "~/components/Footer";
 import Main from "~/components/Main";
