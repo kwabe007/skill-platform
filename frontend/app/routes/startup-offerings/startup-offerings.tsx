@@ -60,7 +60,7 @@ export default function StartupOfferingsRoute() {
               {offeredCount}
             </Badge>
           </div>
-          <div className="grid items-start md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
+          <div className="grid items-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
             {skill.offeredUsers.docs.map((user, index) => {
               const latestSentRequest = connectionRequests
                 .filter((request) => request.receiver.id === user.id)
@@ -86,7 +86,7 @@ export default function StartupOfferingsRoute() {
               {neededCount}
             </Badge>
           </div>
-          <div className="grid items-start md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
+          <div className="grid items-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4">
             {skill.neededUsers.docs.map((user, index) => {
               const latestSentRequest = connectionRequests
                 .filter((request) => request.receiver.id === user.id)
