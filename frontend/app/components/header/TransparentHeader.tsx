@@ -7,6 +7,7 @@ import { PLATFORM_NAME, useOptionalUser } from "~/utils";
 import { Button } from "~/components/ui/button";
 import LargeScreenButtons from "~/components/header/LargeScreenButtons";
 import MobileNavigationSheet from "~/components/MobileNavigationSheet";
+import SmallScreenButtons from "~/components/header/SmallScreenButtons";
 
 interface TransparentHeaderProps {
   variant?: "default" | "transparent";
@@ -37,17 +38,7 @@ export default function TransparentHeader({
           {PLATFORM_NAME}
         </Link>
         <LargeScreenButtons className="hidden md:flex" />
-        {user ? (
-          <ButtonLink variant="primary-foreground-outline" to="/requests">
-            <Send />
-            Requests
-          </ButtonLink>
-        ) : (
-          <ButtonLink variant="primary-foreground-outline" to="/signup">
-            Join
-          </ButtonLink>
-        )}
-        <MobileNavigationSheet triggerClassName="md:hidden" />
+        <SmallScreenButtons className="md:hidden" />
       </Container>
     </header>
   );
