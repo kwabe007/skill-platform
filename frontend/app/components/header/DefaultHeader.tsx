@@ -9,6 +9,7 @@ import { Form } from "react-router";
 import { Button } from "~/components/ui/button";
 import LargeScreenButtons from "~/components/header/LargeScreenButtons";
 import MobileNavigationSheet from "~/components/MobileNavigationSheet";
+import SmallScreenButtons from "~/components/header/SmallScreenButtons";
 
 interface DefaultHeaderProps {
   pageTitle?: string;
@@ -31,17 +32,7 @@ export default function DefaultHeader({
         <div className="flex justify-end gap-4">
           <BackButton variant="primary-foreground-ghost" className="mr-auto" />
           <LargeScreenButtons className="hidden md:flex" />
-          {user ? (
-            <ButtonLink variant="primary-foreground-outline" to="/requests">
-              <Send />
-              Requests
-            </ButtonLink>
-          ) : (
-            <ButtonLink variant="primary-foreground-outline" to="/signup">
-              Join
-            </ButtonLink>
-          )}
-          <MobileNavigationSheet triggerClassName="md:hidden" />
+          <SmallScreenButtons className="md:hidden" />
         </div>
         <div className="mt-4">
           {pageTitle && (
