@@ -17,7 +17,7 @@ export default function SkillDiscovery({ skills }: SkillDiscoveryProps) {
 
         return (
           <Link key={skill.name} to={`/startup-offerings/${skill.slug}`}>
-            <Card>
+            <Card className="h-full flex flex-col justify-center items-center">
               {/* TODO: Add visual feedback box-shadow on hover */}
               <CardContent className="p-4 text-center">
                 <h4 className="font-medium text-sm mb-2">{skill.name}</h4>
