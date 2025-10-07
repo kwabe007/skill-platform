@@ -1,7 +1,9 @@
 import type { EmailAdapter, SendEmailOptions } from "payload";
 import { APIError } from "payload";
 import * as Brevo from "@getbrevo/brevo";
+import { AccountApi, GetAccountAllOfPlan } from "@getbrevo/brevo";
 import { z } from "zod";
+import { htmlToText } from "html-to-text";
 
 export type BrevoAdapterArgs = {
   apiKey: string;
@@ -12,8 +14,10 @@ export type BrevoAdapterArgs = {
 export const brevoAdapter = (args: BrevoAdapterArgs): EmailAdapter<any> => {
   const { apiKey, defaultFromAddress, defaultFromName } = args;
 
-  const brevo = new Brevo.TransactionalEmailsApi();
-  brevo.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, apiKey);
+  const emailAPI = new Brevo.TransactionalEmailsApi();
+  const accountAPI = new AccountApi();
+  emailAPI.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, apiKey);
+  accountAPI.setApiKey(Brevo.AccountApiApiKeys.apiKey, apiKey);
 
   return () => ({
     name: "brevo-sdk",
@@ -21,13 +25,29 @@ export const brevoAdapter = (args: BrevoAdapterArgs): EmailAdapter<any> => {
     defaultFromName,
 
     sendEmail: async (message) => {
+      const account = await accountAPI.getAccount();
+      const plan = account.body.plan.find(
+        (plan) => plan.type === GetAccountAllOfPlan.TypeEnum.Free,
+      );
+
+      // TODO Send log to error monitoring (e.g. Sentry)
+      if (!plan) {
+        const plansFoundText = account.body.plan.map((plan) => JSON.stringify(plan)).join("\n");
+        console.error(`Brevo free plan not found. Plans found:\n${plansFoundText}`);
+      } else if (plan.credits === 0) {
+        console.error(`No credits left on current Brevo plan.`);
+      } else if (plan.credits < 50) {
+        console.error(`Only ${plan.credits} credits left on current Brevo plan.`);
+      }
+
       const brevoPayload = mapPayloadEmailToBrevoEmail(
         message,
         defaultFromAddress,
         defaultFromName,
       );
+
       try {
-        const response = await brevo.sendTransacEmail(brevoPayload);
+        const response = await emailAPI.sendTransacEmail(brevoPayload);
         return response.body;
       } catch (err) {
         const axiosErrorSchema = z.object({ isAxiosError: z.literal(true) });
@@ -65,7 +85,7 @@ function mapPayloadEmailToBrevoEmail(
   email.replyTo = mapReplyTo(message.replyTo);
   email.subject = message.subject ?? "";
   email.htmlContent = message.html?.toString() || "";
-  email.textContent = message.text?.toString() || "";
+  email.textContent = message.text ? message.text.toString() : htmlToText(email.htmlContent!);
   email.attachment = mapAttachments(message.attachments);
 
   return email;

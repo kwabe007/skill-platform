@@ -4,3 +4,5 @@ export function truthy(value: string | undefined, message?: string | (() => stri
   invariant(value, message);
   return value;
 }
+
+export const PLATFORM_NAME = "Service Exchange";
