@@ -14,24 +14,13 @@ import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { CONNECTION_REQUESTS_SLUG, ConnectionRequests } from "@/collections/ConnectionRequests";
 import { truthy } from "@/utils";
 import { Settings } from "@/globals/Settings";
+import { brevoAdapter } from "@/brevo-adapter";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-export default (() => {
-  return buildConfig({
-    admin: {
-      user: Users.slug,
-      importMap: {
-        baseDir: path.resolve(dirname),
-      },
-    },
-    collections: [Users, Media, Skills, ConnectionRequests],
-    globals: [Settings],
-    editor: lexicalEditor(),
-    defaultDepth: 1,
-    email: !process.env.BREVO_API_KEY
-      ? nodemailerAdapter({
+/*
+nodemailerAdapter({
           defaultFromAddress: truthy(process.env.SMTP_USER, "SMTP_USER is required"),
           defaultFromName: "Service Exchange",
           // Nodemailer transportOptions
@@ -45,7 +34,25 @@ export default (() => {
             },
           },
         })
-      : undefined,
+ */
+
+export default (() => {
+  return buildConfig({
+    admin: {
+      user: Users.slug,
+      importMap: {
+        baseDir: path.resolve(dirname),
+      },
+    },
+    collections: [Users, Media, Skills, ConnectionRequests],
+    globals: [Settings],
+    editor: lexicalEditor(),
+    defaultDepth: 1,
+    email: brevoAdapter({
+      defaultFromAddress: "service-exchange@enbrasak.com",
+      defaultFromName: "Service Exchange",
+      apiKey: process.env.BREVO_API_KEY!,
+    }),
     secret: process.env.PAYLOAD_SECRET || "",
     typescript: {
       outputFile: path.resolve(dirname, "payload-types.ts"),
