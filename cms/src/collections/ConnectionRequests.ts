@@ -1,7 +1,6 @@
 import { CollectionConfig, Forbidden, getPayload, Where } from "payload";
 import { getDefaultAccess } from "@/collections/access-control";
 import config from "@payload-config";
-import { sendEmail } from "@/email";
 import htmlEmail from "./htmlEmailMock.json";
 
 export const CONNECTION_REQUESTS_SLUG = "connection-requests";
@@ -91,7 +90,8 @@ export const ConnectionRequests: CollectionConfig = {
       // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue?
       async ({ data, operation, doc }) => {
         if (operation === "create" && data.sendEmail === true) {
-          await sendEmail({
+          const payload = await getPayload({ config });
+          await payload.sendEmail({
             to: [doc.sender.email],
             subject: `${doc.sender.company.name} wants to connect with you`,
             text: "We should connect.",
