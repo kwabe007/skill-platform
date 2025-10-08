@@ -3,7 +3,7 @@ import Container from "~/components/Container";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Hammer, User } from "lucide-react";
 import type { Route } from "./+types/edit-profile";
-import { editUser, getCurrentUser } from "~/api/api.server";
+import { editUser, getCurrentUser, getSkills } from "~/api/api.server";
 import { data, redirect, useLoaderData } from "react-router";
 import { parseFormData, useForm, validationError } from "@rvf/react-router";
 import { z } from "zod";
@@ -12,7 +12,8 @@ import ValidatedInputWithLabel from "~/components/ValidatedInputWithLabel";
 import { Button } from "~/components/ui/button";
 import { editUserSchema } from "~/api/api-schemas";
 import { toast } from "sonner";
-import BackButton from "~/components/BackButton";
+import { SkillsAutocomplete } from "~/routes/edit-profile/SkillsAutocomplete";
+import { useState } from "react";
 
 const editUserFormSchema = editUserSchema.extend({
   offeredSkills: z.string(),
@@ -32,7 +33,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     // TODO: Add redirect url in query params
     return redirect("/login");
   }
-  return { user };
+  const skills = await getSkills();
+  return { user, skills };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -70,7 +72,7 @@ export async function action({ request }: Route.ActionArgs) {
     overlay to edit clicked detail */
 //TODO: Add color to cards
 export default function EditProfileRoute() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, skills } = useLoaderData<typeof loader>();
 
   const skillsToString = (skills?: Skill[]) => {
     if (!skills) return "";
@@ -134,19 +136,15 @@ export default function EditProfileRoute() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <ValidatedInputWithLabel
-                as="textarea"
+              <SkillsAutocomplete
                 scope={form.scope("offeredSkills")}
+                skills={skills}
                 label="Skills you offer"
-                placeholder="e.g., Web Development, Marketing, Design, Legal Services"
-                info="Comma-separated list of skills and services you can provide to other startups."
               />
-              <ValidatedInputWithLabel
-                as="textarea"
+              <SkillsAutocomplete
                 scope={form.scope("neededSkills")}
+                skills={skills}
                 label="Skills you need"
-                placeholder="e.g., Social Media, SEO, Accounting, Video Production"
-                info="Comma-separated list of skills and services you need from other startups."
               />
             </CardContent>
           </Card>
