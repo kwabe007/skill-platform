@@ -3,6 +3,11 @@ import Container from "~/components/Container";
 import type { Route } from "./+types/home";
 import { data, useLoaderData } from "react-router";
 import { getSkills } from "~/api/api.server";
+import { Card, CardContent } from "~/components/ui/card";
+import HowItWorksCard from "~/routes/home/HowItWorksCard";
+import { Handshake, SearchCheck, UserPlus } from "lucide-react";
+import { PLATFORM_NAME } from "~/utils";
+import { Button } from "~/components/ui/button";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const skills = await getSkills();
@@ -14,21 +19,59 @@ export default function Home() {
 
   return (
     <div>
-      <section className="bg-gradient-hero text-center py-16 px-4 -mt-[4rem]">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-          <span>Swap skills,</span>
+      <section className="bg-gradient-hero text-center py-16 px-4 -mt-[4rem] space-y-12">
+        <h1 className="text-h2 text-white mt-6">
+          <span>Instead of paying for services,</span>
           <br />
-          <span>Scale faster</span>
+          <span>exchange them</span>
         </h1>
-        <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl mx-auto">
-          Connect with other startups to exchange services instead of cash. Find
-          complementary skills and grow together.
-        </p>
+        <Button
+          variant="primary-foreground-outline"
+          className="text-base px-16 py-5"
+          size="lg"
+        >
+          Find skills
+        </Button>
       </section>
-      <section className="py-16">
-        <Container>
+      <Container className="py-16 space-y-16">
+        <section>
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl font-medium text-center mb-3">
+                How it works
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                {PLATFORM_NAME} lets startups find other startups who complement
+                their skills.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-16 max-w-4xl mx-auto">
+              <HowItWorksCard
+                squareText="1"
+                icon={<UserPlus className="size-5" />}
+                heading="Create your profile"
+                text="Sign up and list the skills your startup has and what services you need"
+              />
+              <HowItWorksCard
+                squareText="2"
+                icon={<SearchCheck className="size-5" />}
+                heading="Browse & Connect"
+                text="Discover startups with skills that complement yours and request to connect with them"
+              />
+              <HowItWorksCard
+                squareText="3"
+                icon={<Handshake className="size-5" />}
+                heading="Exchange Skills"
+                text="Collaborate and trade services to help both startups grow, free of charge"
+              />
+            </div>
+          </div>
+        </section>
+        <section className="">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Discover Skills</h2>
+            <h2 className="text-2xl font-medium text-center">
+              Discover Skills
+            </h2>
             <p className="text-muted-foreground">
               Browse skills to find startups offering or needing them
             </p>
@@ -36,8 +79,8 @@ export default function Home() {
           <div className="">
             <SkillDiscovery skills={skills} />
           </div>
-        </Container>
-      </section>
+        </section>
+      </Container>
     </div>
   );
 }

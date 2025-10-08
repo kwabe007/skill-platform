@@ -14,7 +14,7 @@ import {
   useNavigation,
 } from "react-router";
 import Text from "~/components/Text";
-import { useOptionalUser } from "~/utils";
+import { PLATFORM_NAME, useOptionalUser } from "~/utils";
 import LogOutButton from "~/components/LogOutButton";
 import { cn } from "~/lib/utils";
 import ButtonLink from "~/components/ButtonLink";
@@ -50,7 +50,7 @@ export default function MobileNavigationSheet({
         <div className="flex flex-col h-full">
           <div className="flex items-center bg-gradient-hero h-36 p-8">
             <Text variant="h3" className="text-white">
-              SkillSwap
+              {PLATFORM_NAME}
             </Text>
           </div>
 

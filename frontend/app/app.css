@@ -157,3 +157,27 @@
 @utility no-scrollbar {
   @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }
+
+@utility text-h1 {
+  @apply text-4xl font-extrabold tracking-tight text-balance;
+}
+
+@utility text-h2 {
+  @apply text-3xl font-semibold tracking-tight;
+}
+
+@utility text-h3 {
+  @apply text-2xl font-semibold tracking-tight;
+}
+
+@utility text-h4 {
+  @apply text-xl font-semibold tracking-tight;
+}
+
+@utility text-muted-sm {
+  @apply text-sm text-muted-foreground;
+}
+
+@utility flex-center {
+  @apply flex items-center justify-center;
+}

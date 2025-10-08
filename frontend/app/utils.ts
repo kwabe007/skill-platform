@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 
-export const PLATFORM_NAME = "Skill Platform";
+export const PLATFORM_NAME = "Service Exchange";
 
 /**
  * Joins a base URL with one or more path segments.
