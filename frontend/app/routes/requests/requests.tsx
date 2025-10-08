@@ -3,12 +3,14 @@ import {
   getConnectionRequestsForUser,
   getUserOrRedirect,
 } from "~/api/api.server";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import Container from "~/components/Container";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Inbox, Send } from "lucide-react";
 import { useRequiredUser } from "~/utils";
 import RequestCard from "~/routes/requests/RequestCard";
+import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 export const handle = {
   pageTitle: "Requests",
@@ -47,19 +49,55 @@ export default function RequestsRoute() {
         </TabsList>
 
         <TabsContent value="sent">
-          <div>
-            {sentRequests.map((request) => (
-              <RequestCard key={request.id} type="sent" request={request} />
-            ))}
-          </div>
+          {sentRequests.length > 0 ? (
+            <div>
+              {sentRequests.map((request) => (
+                <RequestCard key={request.id} type="sent" request={request} />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <Send className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">
+                  No requests sent yet
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Start connecting with startups to see your requests here.
+                </p>
+                <Link to="/">
+                  <Button>Browse services</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="received">
-          <div>
-            {receivedRequests.map((request) => (
-              <RequestCard key={request.id} type="received" request={request} />
-            ))}
-          </div>
+          {receivedRequests.length > 0 ? (
+            <div>
+              {receivedRequests.map((request) => (
+                <RequestCard
+                  key={request.id}
+                  type="received"
+                  request={request}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <Inbox className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">
+                  No requests received yet
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  When someone wants to connect with your startup, you'll see
+                  their requests here.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </Container>
