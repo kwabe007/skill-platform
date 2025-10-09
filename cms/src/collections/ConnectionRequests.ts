@@ -48,7 +48,6 @@ export const ConnectionRequests: CollectionConfig = {
         // Show field only in creation view
         condition: ({ id }) => !id,
       },
-      required: true,
       virtual: true,
     },
   ],
