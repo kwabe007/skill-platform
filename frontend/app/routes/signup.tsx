@@ -74,15 +74,15 @@ export default function Signup() {
         {!success ? (
           <Card className="w-full mt-4">
             <CardHeader as="header" className="text-center">
-              <h1 className="text-2xl font-bold tracking-tight text-balance">
+              <h1 className="text-2xl font-bold text-balance">
                 Join {PLATFORM_NAME}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground">
                 Create an account to start connecting with other startups
               </p>
             </CardHeader>
             <CardContent>
-              <form {...form.getFormProps()} className="space-y-4">
+              <form {...form.getFormProps()} className="space-y-6">
                 <ValidatedInputWithLabel
                   scope={form.scope("fullName")}
                   label="Full name"
@@ -105,9 +105,11 @@ export default function Signup() {
             </CardContent>
             <CardFooter className="flex flex-col">
               <p className="text-sm text-muted-foreground">
-                Already have an account?
+                Already have an account?{" "}
+                <ButtonLink variant="text-link" to="/login">
+                  Log in here
+                </ButtonLink>
               </p>
-              <ButtonLink to="/login">Log in here</ButtonLink>
             </CardFooter>
           </Card>
         ) : (

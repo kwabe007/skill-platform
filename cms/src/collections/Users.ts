@@ -1,6 +1,10 @@
 import { CollectionConfig, ValidationError } from "payload";
 import invariant from "tiny-invariant";
 import { adminOnly, adminOnlyField, currentUserAppAdmin } from "@/collections/access-control";
+import { render } from "@react-email/components";
+import ForgotPasswordEmail from "@/emails/ForgotPasswordEmail";
+import { buildUrl, PLATFORM_NAME } from "@/utils";
+import { env } from "@/env";
 
 // TODO: Create an issue on payload for users being able to set _verified to true via API
 export const Users: CollectionConfig = {
@@ -51,6 +55,13 @@ export const Users: CollectionConfig = {
               Your account will not be verified without this step.
             </p>
           </div>`;
+      },
+    },
+    forgotPassword: {
+      // @ts-expect-error -- token should exist here
+      generateEmailHTML: ({ token }) => {
+        const resetLink = buildUrl(env.FRONTEND_BASE_URL, `reset-password?token=${token}`);
+        return render(ForgotPasswordEmail({ platformName: PLATFORM_NAME, resetLink }));
       },
     },
   },

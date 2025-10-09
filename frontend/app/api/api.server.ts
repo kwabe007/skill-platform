@@ -4,9 +4,11 @@ import { buildUrl } from "~/utils";
 import invariant from "tiny-invariant";
 import type {
   EditUserData,
+  ForgotPasswordData,
   GetConnectionRequestData,
   LoginData,
   RequestConnectionData,
+  ResetPasswordData,
   SignupData,
 } from "~/api/api-schemas";
 import type {
@@ -405,6 +407,53 @@ export async function markConnectionRequestsRead(req: Request, userId: number) {
     },
     body: JSON.stringify({ unreadRequests: false }),
   });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
+  return jsonData.doc as User1;
+}
+
+export async function forgotPassword(
+  req: Request,
+  forgotPasswordData: ForgotPasswordData,
+) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, `api/users/forgot-password`);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify(forgotPasswordData),
+  });
+
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
+}
+
+export async function resetPassword(
+  req: Request,
+  resetPasswordData: ResetPasswordData,
+) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, `api/users/reset-password`);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify(resetPasswordData),
+  });
+
   const jsonData = await response.json();
   if (!response.ok) {
     console.dir(jsonData, { depth: null });

@@ -80,34 +80,43 @@ export default function Login() {
         </ButtonLink>
         <Card className="w-full mt-4">
           <CardHeader as="header" className="text-center">
-            <p className="text-2xl font-bold tracking-tight text-balance">
-              Welcome back
-            </p>
-            <h1 className="text-sm text-muted-foreground">
+            <p className="text-2xl font-bold text-balance">Welcome back</p>
+            <h1 className="text-muted-foreground">
               Sign in to your account to continue
             </h1>
           </CardHeader>
           <CardContent>
-            <form {...form.getFormProps()} className="space-y-4">
+            <form {...form.getFormProps()} className="space-y-6">
               <ValidatedInputWithLabel
                 scope={form.scope("email")}
                 icon={Mail}
                 placeholder="Enter your email"
               />
-              <ValidatedInputWithLabel
-                scope={form.scope("password")}
-                type="password"
-                icon={Lock}
-                placeholder="Enter your password"
-              />
+              <div>
+                <ValidatedInputWithLabel
+                  scope={form.scope("password")}
+                  type="password"
+                  icon={Lock}
+                  placeholder="Enter your password"
+                />
+                <ButtonLink
+                  variant="text-link"
+                  className="inline-block mt-2"
+                  to="/forgot-password"
+                >
+                  Forgot password?
+                </ButtonLink>
+              </div>
               <Button className="w-full">Log in</Button>
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col">
+          <CardFooter className="flex flex-col space-y-4">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?
+              Don't have an account?{" "}
+              <ButtonLink variant="text-link" to="/signup">
+                Sign up here
+              </ButtonLink>
             </p>
-            <ButtonLink to="/signup">Sign up here</ButtonLink>
           </CardFooter>
         </Card>
       </Container>

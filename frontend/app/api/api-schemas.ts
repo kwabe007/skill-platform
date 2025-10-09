@@ -49,3 +49,12 @@ export type GetConnectionRequestData = z.infer<
 export type GetConnectionRequestsQueryData = NonNullable<
   GetConnectionRequestsQuery["ConnectionRequests"]
 >["docs"][number];
+
+export const forgotPasswordSchema = z.object({ email: nonEmptyStringSchema });
+export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+  token: nonEmptyStringSchema,
+  password: nonEmptyStringSchema,
+});
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;

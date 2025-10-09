@@ -3,6 +3,7 @@ import type { User } from "@payload-types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
 export const PLATFORM_NAME = "Startup Trade";
 
@@ -203,4 +204,13 @@ export function useEnv() {
   throw new Error(
     "Tried getting env from useEnv but no env found in root loader.",
   );
+}
+
+/**
+ * Check if a fetcher has data with a success property set to `true`.
+ * @param data
+ */
+export function parseSuccess(data: unknown) {
+  const schema = z.object({ data: z.object({ success: z.literal(true) }) });
+  return schema.safeParse(data).success;
 }
