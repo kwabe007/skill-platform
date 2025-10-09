@@ -2,6 +2,8 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
@@ -48,21 +50,23 @@ export default function MobileNavigationSheet({
       </SheetTrigger>
       <SheetContent className="w-[300px] border-l-0 [&>button:first-of-type]:hidden">
         <div className="flex flex-col h-full">
-          <div className="flex items-center bg-gradient-hero h-36 p-8">
-            <Text variant="h3" className="text-white">
-              {PLATFORM_NAME}
-            </Text>
-          </div>
-
-          <SheetClose asChild>
-            <Button
-              variant="primary-foreground-ghost"
-              className="absolute top-2 right-2"
-            >
-              <X />
-            </Button>
-          </SheetClose>
-
+          <SheetHeader className="p-0">
+            <SheetTitle>
+              <div className="flex items-center bg-gradient-hero h-36 p-8">
+                <Text variant="h3" className="text-white">
+                  {PLATFORM_NAME}
+                </Text>
+              </div>
+            </SheetTitle>
+            <SheetClose asChild>
+              <Button
+                variant="primary-foreground-ghost"
+                className="absolute top-2 right-2"
+              >
+                <X />
+              </Button>
+            </SheetClose>
+          </SheetHeader>
           <div className="grow flex flex-col gap-3 flex-1 border-l p-8">
             {user ? (
               <>
