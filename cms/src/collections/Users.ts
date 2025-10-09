@@ -102,6 +102,14 @@ export const Users: CollectionConfig = {
         },
       ],
     },
+    {
+      name: "unreadRequests",
+      type: "checkbox",
+      admin: {
+        // Don't show field in creation view
+        condition: ({ id }) => id,
+      },
+    },
   ],
   hooks: {
     beforeValidate: [

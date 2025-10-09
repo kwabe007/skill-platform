@@ -5,6 +5,7 @@ import { render } from "@react-email/components";
 import ConnectionRequestEmail from "@/emails/ConnectionRequestEmail";
 import { env } from "@/env";
 import { buildUrl } from "@/utils";
+import { User } from "@/payload-types";
 
 export const CONNECTION_REQUESTS_SLUG = "connection-requests";
 
@@ -90,24 +91,50 @@ export const ConnectionRequests: CollectionConfig = {
       /**
        * Send email if sendEmail was set to true in creation.
        */
-      // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue?
-      async ({ data, operation, doc }) => {
-        if (operation === "create" && data.sendEmail === true) {
-          const emailHtml = await render(
-            ConnectionRequestEmail({
-              senderCompanyName: doc.sender.company.name,
-              senderFullName: doc.sender.fullName,
-              senderEmail: doc.sender.email,
-              sencerProfileUrl: `${buildUrl(env.FRONTEND_BASE_URL, "edit-profile")}`,
-              message: doc.message,
-            }),
-          );
-          const payload = await getPayload({ config });
-          await payload.sendEmail({
-            to: [doc.receiver.email],
-            subject: `${doc.sender.company.name} wants to connect with you`,
-            html: emailHtml,
-            replyTo: doc.sender.email,
+      // TODO: data.sendEmail gets set to false when api request did not supply a value. Possible Payload issue.
+      async ({ req, data, operation, doc }) => {
+        if (operation === "create") {
+          // TODO: Figure out why doc.receiver is a number when creating a connection request from admin panel. Possible Payload issue.
+          let receiver: User;
+
+          if (typeof doc.receiver === "number") {
+            receiver = await req.payload.findByID({
+              req,
+              collection: "users",
+              id: doc.receiver,
+            });
+          } else {
+            receiver = doc.receiver;
+          }
+
+          if (data.sendEmail === true) {
+            const emailHtml = await render(
+              ConnectionRequestEmail({
+                senderCompanyName: doc.sender.company.name,
+                senderFullName: doc.sender.fullName,
+                senderEmail: doc.sender.email,
+                sencerProfileUrl: `${buildUrl(env.FRONTEND_BASE_URL, "edit-profile")}`,
+                message: doc.message,
+              }),
+            );
+            await req.payload.sendEmail({
+              to: [receiver.email],
+              subject: `${doc.sender.company.name} wants to connect with you`,
+              html: emailHtml,
+              replyTo: doc.sender.email,
+            });
+          }
+          // TODO: File an issue. Seems to be a bug where if you don't use the `req` argument (i.e. no transaction), payload hangs.
+          // See https://www.reddit.com/r/PayloadCMS/comments/1bngu3a/hooks_stalling_when_trying_to_create_a_relation/
+          await req.payload.update({
+            req,
+            collection: "users",
+            where: {
+              id: { equals: receiver.id },
+            },
+            data: {
+              unreadRequests: true,
+            },
           });
         }
         return data;

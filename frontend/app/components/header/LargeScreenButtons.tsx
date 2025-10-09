@@ -4,6 +4,7 @@ import { LogIn, LogOut, Send, User } from "lucide-react";
 import { Form } from "react-router";
 import { Button } from "~/components/ui/button";
 import { useOptionalUser } from "~/utils";
+import UnreadBadgeWrapper from "~/components/UnreadBadgeWrapper";
 
 interface LargeScreenButtonsProps {
   className?: string;
@@ -22,10 +23,12 @@ export default function LargeScreenButtons({
             <User />
             Profile
           </ButtonLink>
-          <ButtonLink variant="primary-foreground-outline" to="/requests">
-            <Send />
-            Requests
-          </ButtonLink>
+          <UnreadBadgeWrapper show={user.unreadRequests}>
+            <ButtonLink variant="primary-foreground-outline" to="/requests">
+              <Send />
+              Requests
+            </ButtonLink>
+          </UnreadBadgeWrapper>
         </>
       )}
       {user ? (

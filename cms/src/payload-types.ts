@@ -140,6 +140,7 @@ export interface User {
     name?: string | null;
     description?: string | null;
   };
+  unreadRequests?: boolean | null;
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -295,6 +296,7 @@ export interface UsersSelect<T extends boolean = true> {
         name?: T;
         description?: T;
       };
+  unreadRequests?: T;
   updatedAt?: T;
   createdAt?: T;
   enableAPIKey?: T;

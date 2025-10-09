@@ -392,3 +392,22 @@ export async function getConnectionRequestsForUser(userId: number) {
   }
   return result.data.ConnectionRequests.docs;
 }
+
+export async function markConnectionRequestsRead(req: Request, userId: number) {
+  //TODO: Only get the payload-token cookie
+  const requestCookie = req.headers.get("Cookie");
+  const url = buildUrl(BASE_URL, `api/users/${userId}`);
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(requestCookie ? { Cookie: requestCookie } : {}),
+    },
+    body: JSON.stringify({ unreadRequests: false }),
+  });
+  const jsonData = await response.json();
+  if (!response.ok) {
+    console.dir(jsonData, { depth: null });
+    throw data(jsonData, { status: response.status });
+  }
+}

@@ -3,7 +3,7 @@ import {
   getConnectionRequestsForUser,
   getUserOrRedirect,
 } from "~/api/api.server";
-import { Link, useLoaderData } from "react-router";
+import { Link, useFetcher, useLoaderData } from "react-router";
 import Container from "~/components/Container";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Inbox, Send } from "lucide-react";
@@ -11,6 +11,8 @@ import { useRequiredUser } from "~/utils";
 import RequestCard from "~/routes/requests/RequestCard";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import UnreadBadge from "~/components/UnreadBadge";
+import { useEffect, useState } from "react";
 
 export const handle = {
   pageTitle: "Requests",
@@ -26,6 +28,8 @@ export async function action({ request }: Route.ActionArgs) {}
 
 export default function RequestsRoute() {
   const { connectionRequests } = useLoaderData<typeof loader>();
+  const [tab, setTab] = useState("sent");
+  const readRequestsfetcher = useFetcher();
   const user = useRequiredUser();
   const sentRequests = connectionRequests.filter(
     (request) => request.sender.id === user.id,
@@ -34,9 +38,18 @@ export default function RequestsRoute() {
     (request) => request.receiver.id === user.id,
   );
 
+  useEffect(() => {
+    if (tab === "received" && user.unreadRequests) {
+      readRequestsfetcher.submit(null, {
+        method: "POST",
+        action: "/mark-requests-read",
+      });
+    }
+  }, [tab]);
+
   return (
     <Container className="space-y-8 max-w-3xl">
-      <Tabs defaultValue="sent">
+      <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="sent" className="flex items-center gap-2">
             <Send className="size-4" />
@@ -45,6 +58,7 @@ export default function RequestsRoute() {
           <TabsTrigger value="received" className="flex items-center gap-2">
             <Inbox className="size-4" />
             Received ({receivedRequests.length})
+            <UnreadBadge show={user.unreadRequests} className="bg-primary" />
           </TabsTrigger>
         </TabsList>
 

@@ -25,4 +25,5 @@ export default [
   route("verify/:token", "routes/verify.tsx"),
   route("create-connection-request", "routes/create-connection-request.tsx"),
   route("get-connection-request", "routes/get-connection-request.tsx"),
+  route("mark-requests-read", "routes/mark-requests-read.tsx"),
 ] satisfies RouteConfig;
