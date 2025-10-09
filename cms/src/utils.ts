@@ -5,7 +5,7 @@ export function truthy(value: string | undefined, message?: string | (() => stri
   return value;
 }
 
-export const PLATFORM_NAME = "Service Exchange";
+export const PLATFORM_NAME = "Startup Trade";
 
 /**
  * Joins a base URL with one or more path segments.
