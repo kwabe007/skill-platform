@@ -26,7 +26,7 @@ export default function HowItWorksCard({
         {icon}
         <h3 className="text-lg font-semibold">{heading}</h3>
       </div>
-      <p className="text-muted-foreground text-sm leading-5">{text}</p>
+      <p className="text-muted-foreground">{text}</p>
     </div>
   );
 }
