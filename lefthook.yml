@@ -3,10 +3,10 @@ pre-commit:
   commands:
     prettier-frontend:
       root: "frontend/"
-      run: pnpm prettier --write {staged_files}
+      run: pnpm prettier --write --ignore-unknown {staged_files}
       stage_fixed: true
     prettier-cms:
       root: "cms/"
-      run: pnpm prettier --write {staged_files}
+      run: pnpm prettier --write --ignore-unknown {staged_files}
       stage_fixed: true
 
