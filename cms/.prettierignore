@@ -10,8 +10,8 @@ pnpm-lock.yaml
 # Ignore to avoid "No parser" error
 .prettierignore
 .gitignore
+.gitkeep
 .env.example
 *.txt
-
 
 src/app/(payload)/admin/importMap.js
