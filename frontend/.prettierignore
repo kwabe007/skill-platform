@@ -11,7 +11,9 @@ pnpm-lock.yaml
 # Ignore to avoid "No parser" error
 .prettierignore
 .gitignore
+.gitkeep
 .env.example
 *.txt
+.dockerignore
 
 app/graphql
