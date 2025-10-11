@@ -1,0 +1,11 @@
+{
+  "name": "cms-migrate",
+  "version": "1.0.0",
+  "description": "Minimal project to run Payload CMS migrations in docker container.",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.56.0",
+    "payload": "3.56.0"
+  }
+}
