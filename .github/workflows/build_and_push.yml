@@ -26,9 +26,9 @@ jobs:
 
       - name: Build frontend image
         run: |
-          docker build -t $REGISTRY/$PROJECT_PATH/frontend:latest -f frontend/Dockerfile
+          docker build -t $REGISTRY/$PROJECT_PATH/frontend:latest frontend
 
       - name: Build cms image
         run: |
-          docker build -t $REGISTRY/$PROJECT_PATH/cms:latest -f cms/Dockerfile
+          docker build -t $REGISTRY/$PROJECT_PATH/cms:latest cms
           
