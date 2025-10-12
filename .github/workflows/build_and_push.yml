@@ -1,0 +1,34 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: registry.gitlab.com
+  PROJECT_PATH: ${{ vars.GITLAB_PROJECT_PATH }} # e.g. user/repo
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitLab
+        uses: docker/login-action@v3
+        with:
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USERNAME }}
+          password: ${{ secrets.GITLAB_PASSWORD }}
+
+      - name: Build frontend image
+        run: |
+          docker build -t $REGISTRY/$PROJECT_PATH/frontend:latest -f frontend/Dockerfile
+
+      - name: Build cms image
+        run: |
+          docker build -t $REGISTRY/$PROJECT_PATH/cms:latest -f cms/Dockerfile
+          
