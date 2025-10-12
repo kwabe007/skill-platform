@@ -45,7 +45,7 @@ export default function Footer({ className }: FooterProps) {
               </li>
             </ul>
           </div>
-          {env.CONTACT_EMAIL && (
+          {/*          {env.CONTACT_EMAIL && (
             <p className="[grid-area:c] text-sm">
               If you want to get in contact with us, mail us at{" "}
               <Button
@@ -56,7 +56,20 @@ export default function Footer({ className }: FooterProps) {
                 <a href={`mailto:${env.CONTACT_EMAIL}`}>{env.CONTACT_EMAIL}</a>
               </Button>
             </p>
-          )}
+          )}*/}
+          <p>
+            Fill out our feedback form to help us improve.{" "}
+            <Button
+              asChild
+              variant="text-link"
+              className="text-footer-muted-foreground"
+            >
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSd1TDrQi5hvPpcnAQmjpk7Ffz2QIh14CPvpxv1BURP7EW5zPQ/viewform?usp=dialog">
+                Click here
+              </a>
+            </Button>
+            .
+          </p>
         </div>
 
         <div className="border-t border-border mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
