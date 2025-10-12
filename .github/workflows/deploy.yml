@@ -1,0 +1,23 @@
+name: Deploy on Dokploy
+
+on:
+  workflow_run:
+    workflows: ['Build And Push Image']
+    types:
+      - completed
+
+# https://dokploy.linkt.se/api/compose.deploy
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: |
+          curl -X 'POST' \
+          '${{ vars.DOKPLOY_DEPLOY_ENDPOINT }}' \
+          -H 'x-api-key: ${{ secrets.DOKPLOY_ACCESS_TOKEN }}' \
+          -H 'Content-Type: application/json' \
+          -d '{
+           "composeId": "${{ vars.DOKPLOY_COMPOSE_ID }}"
+          }'
