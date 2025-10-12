@@ -26,14 +26,14 @@ jobs:
 
       - name: Build frontend image
         run: |
-          docker build -t $REGISTRY/$PROJECT_PATH/frontend:latest frontend
+          docker build -t $REGISTRY/$PROJECT_PATH/startup-trade-frontend:latest frontend
 
       - name: Build cms image
         run: |
-          docker build -t $REGISTRY/$PROJECT_PATH/cms:latest cms
+          docker build -t $REGISTRY/$PROJECT_PATH/startup-trade-cms:latest cms
 
       - name: Push images
         if: ${{ success() }}
         run: |
-          docker push $REGISTRY/$PROJECT_PATH/frontend:latest
-          docker push $REGISTRY/$PROJECT_PATH/cms:latest
+          docker push $REGISTRY/$PROJECT_PATH/startup-trade-frontend:latest
+          docker push $REGISTRY/$PROJECT_PATH/startup-trade-cms:latest
