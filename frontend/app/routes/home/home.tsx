@@ -8,6 +8,7 @@ import HowItWorksCard from "~/routes/home/HowItWorksCard";
 import { Handshake, SearchCheck, UserPlus } from "lucide-react";
 import { PLATFORM_NAME } from "~/utils";
 import { Button } from "~/components/ui/button";
+import { useRef } from "react";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const skills = await getSkills();
@@ -16,6 +17,22 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Home() {
   const { skills } = useLoaderData<typeof loader>();
+  const discoverSkillsRef = useRef<HTMLElement>(null);
+
+  const scrollToSkillsSection = () => {
+    if (discoverSkillsRef.current) {
+      const offset = -50;
+      const top =
+        discoverSkillsRef.current.getBoundingClientRect().top +
+        window.scrollY +
+        offset;
+
+      window.scrollTo({
+        top,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <div>
@@ -29,6 +46,7 @@ export default function Home() {
           variant="primary-foreground-outline"
           className="text-base px-16 py-5"
           size="lg"
+          onClick={scrollToSkillsSection}
         >
           Search for skills
         </Button>
@@ -66,7 +84,7 @@ export default function Home() {
             />
           </div>
         </section>
-        <section className="space-y-12 md:space-y-16">
+        <section className="space-y-12 md:space-y-16" ref={discoverSkillsRef}>
           <div className="text-center">
             <h2 className="text-2xl font-medium text-center mb-3">
               Discover Skills
