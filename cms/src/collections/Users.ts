@@ -137,16 +137,19 @@ export const Users: CollectionConfig = {
       },
     ],
     beforeChange: [
-      // Prevent tampering with verification fields
-      ({ data, req }) => {
+      // Prevent tampering with verification fields if it's not the first user being created.
+      async ({ data, req }) => {
         if (req.user?.role === "admin") return data;
 
-        if ("_verified" in data) {
+        const totalUsers = await req.payload.count({
+          req,
+          collection: "users",
+        });
+        if (totalUsers.totalDocs > 0) {
           delete data._verified;
-        }
-        if ("_verificationToken" in data) {
           delete data._verificationToken;
         }
+
         return data;
       },
     ],
