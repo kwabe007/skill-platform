@@ -31,4 +31,10 @@ jobs:
       - name: Build cms image
         run: |
           docker build -t $REGISTRY/$PROJECT_PATH/cms:latest cms
+
+      - name: Push images
+        if: ${{ success() }}
+        run: |
+          docker push $REGISTRY/$PROJECT_PATH/frontend:latest
+          docker push $REGISTRY/$PROJECT_PATH/cms:latest
           
