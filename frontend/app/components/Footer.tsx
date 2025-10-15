@@ -76,9 +76,22 @@ export default function Footer({ className }: FooterProps) {
           <p className=" text-sm">
             © 2025 {PLATFORM_NAME}. All rights reserved.
           </p>
-          <div className="flex items-center gap-1  text-sm">
-            Made with <Heart className="w-4 h-4 text-red-500 fill-current" />{" "}
-            for startups
+          <div className="text-sm">
+            <div className="flex items-center gap-1">
+              Made with <Heart className="w-4 h-4 text-red-500 fill-current" />{" "}
+              for startups
+              <br />
+            </div>
+            <div className="mx-auto w-fit lg:w-auto ">
+              by{" "}
+              <a
+                className="text-base font-lexend font-bold"
+                rel="noopener"
+                href="https://enbrasak.com"
+              >
+                EnBraSak
+              </a>
+            </div>
           </div>
         </div>
       </div>
