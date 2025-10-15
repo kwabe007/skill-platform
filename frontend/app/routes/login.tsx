@@ -5,7 +5,7 @@ import {
   CardHeader,
 } from "~/components/ui/card";
 import Container from "~/components/Container";
-import { redirect } from "react-router";
+import { data, redirect } from "react-router";
 import { Button } from "~/components/ui/button";
 import ButtonLink from "~/components/ButtonLink";
 import { ArrowLeft, Lock, Mail } from "lucide-react";

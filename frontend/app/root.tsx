@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -15,12 +16,13 @@ import "./app.css";
 import { getCurrentUser } from "~/api/api.server";
 import { Toaster } from "~/components/ui/sonner";
 import { readToastSession } from "~/cookie-serializers.server";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import Container from "~/components/Container";
 import { PLATFORM_NAME } from "~/utils";
 import ButtonLink from "~/components/ButtonLink";
 import { ArrowLeft } from "lucide-react";
+import * as Sentry from "@sentry/react-router";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -62,6 +64,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     CONTACT_EMAIL: process.env.CONTACT_EMAIL,
     PLAUSIBLE_DATA_DOMAIN: process.env.PLAUSIBLE_DATA_DOMAIN,
     PLAUSIBLE_SCRIPT_SRC: process.env.PLAUSIBLE_SCRIPT_SRC,
+    SENTRY_DSN: process.env.SENTRY_DSN,
   };
   return data(
     { user, message, toastKey, env: clientEnv },
@@ -72,6 +75,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function App() {
   const { message, toastKey, env } = useLoaderData<typeof loader>();
 
+  // Show toast if message is present
   useEffect(() => {
     if (message) {
       setTimeout(() => {
@@ -95,6 +99,11 @@ export default function App() {
           src={env.PLAUSIBLE_SCRIPT_SRC}
         ></script>
       )}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.env = ${JSON.stringify(env)};`,
+        }}
+      />
     </>
   );
 }
@@ -104,15 +113,29 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
 
+  const location = useLocation();
+  const hasHydrated = useRef(false);
+
+  // If route ErrorResponse is encountered client-side, it's most likely an error in the app, so capture it with Sentry.
+  useEffect(() => {
+    if (hasHydrated.current && isRouteErrorResponse(error)) {
+      Sentry.captureException(error);
+    } else {
+      hasHydrated.current = true;
+    }
+  }, [location]);
+
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+  } else if (error && error instanceof Error) {
+    if (import.meta.env.DEV) {
+      details = error.message;
+      stack = error.stack;
+    }
   }
 
   return (

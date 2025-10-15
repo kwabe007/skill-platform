@@ -5,8 +5,8 @@
   "scripts": {
     "build": "react-router build",
     "component": "node scripts/code-templates/start.js",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "dev": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router dev",
+    "start": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
@@ -21,10 +21,12 @@
     "@react-router/node": "7.9.4",
     "@react-router/serve": "7.9.4",
     "@rvf/react-router": "^8.0.0",
+    "@sentry/react-router": "^10.20.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "graphql": "^16.11.0",
     "isbot": "^5.1.27",
     "lucide-react": "^0.544.0",
