@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui/button";
-import { type Route } from "../../.react-router/types/app/routes/+types/sentry-example-page";
+import { type Route } from "./+types/sentry-example-page";
 import { adminOrDevModeOr404 } from "~/utils.server";
 import { Form } from "react-router";
 
