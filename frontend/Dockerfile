@@ -31,6 +31,7 @@ RUN adduser --system --uid 1001 reactrouter
 COPY --from=builder --chown=reactrouter:nodejs /app/build ./build
 COPY --from=builder --chown=reactrouter:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=reactrouter:nodejs /app/package.json ./
+COPY --from=builder --chown=reactrouter:nodejs /app/instrument.server.mjs ./
 
 USER reactrouter
 
