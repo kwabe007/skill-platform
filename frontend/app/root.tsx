@@ -53,8 +53,15 @@ export async function loader({ request }: Route.LoaderArgs) {
   const user = await getCurrentUser(request);
   const { message, headers: toastHeaders } = await readToastSession(request);
   const toastKey = message ? Math.random().toString(36) : undefined;
-  const env = { CONTACT_EMAIL: process.env.CONTACT_EMAIL };
-  return data({ user, message, toastKey, env }, { headers: toastHeaders });
+  const clientEnv = {
+    CONTACT_EMAIL: process.env.CONTACT_EMAIL,
+    PLAUSIBLE_DATA_DOMAIN: process.env.PLAUSIBLE_DATA_DOMAIN,
+    PLAUSIBLE_SCRIPT_SRC: process.env.PLAUSIBLE_SCRIPT_SRC,
+  };
+  return data(
+    { user, message, toastKey, env: clientEnv },
+    { headers: toastHeaders },
+  );
 }
 
 export default function App() {
@@ -76,6 +83,13 @@ export default function App() {
           __html: `window.env = ${JSON.stringify(env)}`,
         }}
       />
+      {env.PLAUSIBLE_DATA_DOMAIN && env.PLAUSIBLE_SCRIPT_SRC && (
+        <script
+          defer
+          data-domain={env.PLAUSIBLE_DATA_DOMAIN}
+          src={env.PLAUSIBLE_SCRIPT_SRC}
+        ></script>
+      )}
     </>
   );
 }
