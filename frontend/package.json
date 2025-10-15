@@ -6,7 +6,7 @@
     "build": "react-router build",
     "component": "node scripts/code-templates/start.js",
     "dev": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router dev",
-    "start": "NODE_OPTIONS='--import ./instrument.server.mjs' react-router-serve ./build/server/index.js",
+    "start": "NODE_OPTIONS='--import ./instrument.server.mjs' NODE_ENV=production react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
