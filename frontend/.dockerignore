@@ -1,7 +1,14 @@
 .react-router
 build
 node_modules
-README.md
-
+scripts
+.env
+.env.example
+.gitignore
+.prettierignore
+.prettierrc
+components.json
 Dockerfile
 docker-compose.yml
+library-sources
+README.md

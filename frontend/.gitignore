@@ -6,3 +6,6 @@
 /build/
 
 .env
+
+# Folder for keeping library sources for debugging purposes
+/library-sources/
