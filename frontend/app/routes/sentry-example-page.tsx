@@ -1,13 +1,16 @@
 import { Button } from "~/components/ui/button";
-import { type Route } from "./+types/sentry-example-page";
 import { adminOrDevModeOr404 } from "~/utils.server";
-import { Form } from "react-router";
+import {
+  type ActionFunctionArgs,
+  Form,
+  type LoaderFunctionArgs,
+} from "react-router";
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await adminOrDevModeOr404(request);
 }
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   await adminOrDevModeOr404(request);
   const formData = await request.formData();
   const value = formData.get("field");
