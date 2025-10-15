@@ -73,7 +73,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function App() {
-  const { message, toastKey, env } = useLoaderData<typeof loader>();
+  const { message, toastKey, env, user } = useLoaderData<typeof loader>();
 
   // Show toast if message is present
   useEffect(() => {
@@ -83,6 +83,19 @@ export default function App() {
       });
     }
   }, [`${message}-${toastKey}`]);
+
+  // Set user to be sent with Sentry events
+  // TODO: Doesn't seem to be working. Maybe because of Glitchtip?
+  useEffect(() => {
+    if (user) {
+      Sentry.setUser({
+        id: user.id,
+        email: user.email,
+      });
+    } else {
+      Sentry.setUser(null);
+    }
+  }, [user]);
 
   return (
     <>
