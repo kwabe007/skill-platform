@@ -178,6 +178,14 @@
   @apply text-sm text-muted-foreground;
 }
 
+@utility text-giant {
+  @apply text-7xl sm:text-9xl font-bold;
+}
+
 @utility flex-center {
   @apply flex items-center justify-center;
+}
+
+@utility flex-col-center {
+  @apply flex flex-col items-center justify-center;
 }

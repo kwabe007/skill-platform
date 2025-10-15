@@ -3,7 +3,6 @@ import Container from "~/components/Container";
 import type { Route } from "./+types/home";
 import { data, useLoaderData } from "react-router";
 import { getSkills } from "~/api/api.server";
-import { Card, CardContent } from "~/components/ui/card";
 import HowItWorksCard from "~/routes/home/HowItWorksCard";
 import { Handshake, SearchCheck, UserPlus } from "lucide-react";
 import { PLATFORM_NAME } from "~/utils";

@@ -31,10 +31,7 @@ export default function TransparentHeader({
       )}
     >
       <Container className="h-full flex justify-end items-center gap-4">
-        <Link
-          className="text-xl text-white font-bold leading-tight mr-auto"
-          to="/"
-        >
+        <Link className="text-h4 text-white mr-auto" to="/">
           {PLATFORM_NAME}
         </Link>
         <LargeScreenButtons className="hidden md:flex" />
